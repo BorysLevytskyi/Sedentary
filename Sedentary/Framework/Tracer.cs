@@ -12,7 +12,7 @@ namespace Sedentary.Framework
 		public static void Write(string message, params object[] messageArgs)
 		{
 			var stack = new StackTrace();
-			var className = stack.GetFrame(1).GetMethod().DeclaringType.Name;
+			var className = GetCallingMember().DeclaringType.Name;
 			Trace.WriteLine(string.Format(@"{0:hh\:mm\:ss} {1}: {2}", DateTime.Now.TimeOfDay, className, string.Format(message, messageArgs)));
 			Trace.Flush();
 		}
@@ -20,7 +20,7 @@ namespace Sedentary.Framework
 		public static void WriteMethod(params object[] args)
 		{
 			var stack = new StackTrace();
-			MethodBase method = stack.GetFrame(1).GetMethod();
+			MethodBase method = GetCallingMember();
 			var className = method.DeclaringType.Name;
 			
 			Trace.WriteLine(
@@ -41,7 +41,7 @@ namespace Sedentary.Framework
 		public static void WritePropertyValue(object propertyValue, [CallerMemberName] string propertyName = null)
 		{
 			var stack = new StackTrace();
-			var className = stack.GetFrame(1).GetMethod().DeclaringType.Name;
+			var className = GetCallingMember().DeclaringType.Name;
 			Trace.WriteLine(string.Format(@"{0:hh\:mm\:ss} {1}: {2}={3}", DateTime.Now.TimeOfDay, className, propertyName, propertyValue));
 			Trace.Flush();
 		}
@@ -56,6 +56,32 @@ namespace Sedentary.Framework
 				Trace.WriteLine(string.Format("{0} = {1}", property.Name, property.GetValue(obj)));
 			}
 
+			Trace.Unindent();
+		}
+
+		private static MethodBase GetCallingMember()
+		{
+			var stack = new StackTrace();
+			foreach (var frame in stack.GetFrames())
+			{
+				MethodBase method = frame.GetMethod();
+
+				if (method.DeclaringType == typeof (Tracer))
+				{
+					continue;
+				}
+
+				return method;
+			}
+
+			throw new Exception("Cannot get calling member");
+		}
+
+		public static void WriteError(string msg, Exception ex)
+		{
+			Write(msg);
+			Trace.Indent();
+			Trace.Write(ex.ToString());
 			Trace.Unindent();
 		}
 	}

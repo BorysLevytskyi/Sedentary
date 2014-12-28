@@ -30,7 +30,9 @@ namespace Sedentary
 	    {
 	        base.OnExit(e);
 
+			StatsRepo.Save(_tracker.Statistics);
             _tracker.Dispose();
+			
 	    }
 	}
 }

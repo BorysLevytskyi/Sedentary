@@ -38,7 +38,7 @@ namespace Sedentary.Model
 		{
 			Tracer.Write("Started");
 
-			_stats = new Statistics();
+			_stats = StatsRepo.Get();
 			_tray = new TrayIcon(_stats);
 			_idleWatcher = new IdleWatcher();
 			_timer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};

@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Diagnostics;
-using Sedentary.Framework;
 
 namespace Sedentary.Model
 {
+	[Serializable]
 	public class WorkPeriod
 	{
 		private readonly WorkState _state;
 		private readonly TimeSpan _startTime;
 		private TimeSpan _endTime;
+
+		public WorkPeriod()
+		{}
 
 		public WorkPeriod(WorkState state, TimeSpan startTime)
 		{
@@ -41,7 +43,7 @@ namespace Sedentary.Model
 			}
 		}
 
-		private bool IsCompleted
+		public bool IsCompleted
 		{
 			get { return _endTime > TimeSpan.Zero; }
 		}

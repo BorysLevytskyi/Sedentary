@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using Sedentary.Framework;
 
@@ -8,9 +8,16 @@ namespace Sedentary.Model
 {
 	public class Statistics
 	{
+		public Statistics(IList<WorkPeriod> periods)
+		{
+			_periods = new ObservableCollection<WorkPeriod>(periods);
+			_currentPeriod = periods.FirstOrDefault(p => !p.IsCompleted);
+		}
+
 		public Statistics()
 		{
 			_periods = new ObservableCollection<WorkPeriod>();
+
 			StartPeriod(new WorkPeriod(WorkState.Sitting, DateTime.Now.TimeOfDay));
 		}
 

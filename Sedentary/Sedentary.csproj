@@ -72,6 +72,7 @@
     <Compile Include="Model\Statistics.cs" />
     <Compile Include="Model\IdleWatcher.cs" />
     <Compile Include="Framework\Tracer.cs" />
+    <Compile Include="Model\StatsRepo.cs" />
     <Compile Include="Model\WorkTracker.cs" />
     <Compile Include="Framework\TrayIcon.cs" />
     <Page Include="Views\MainWindow.xaml">
