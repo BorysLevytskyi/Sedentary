@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Sedentary.Framework;
+using Sedentary.Framework.Diagnostics;
 using Sedentary.Model;
 using Sedentary.Properties;
 

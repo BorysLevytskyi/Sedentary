@@ -7,7 +7,7 @@ namespace Sedentary.Model
 	public class WorkTracker : IDisposable
 	{
 		public static readonly TimeSpan IdleThreshold = TimeSpan.FromSeconds(60);
-		public static readonly TimeSpan MaxSittingTime = TimeSpan.FromMinutes(20);
+		public static readonly TimeSpan MaxSittingTime = TimeSpan.FromMinutes(60);
 		public static readonly TimeSpan Cooldown = TimeSpan.FromMinutes(5);
 
 		private IdleWatcher _idleWatcher;

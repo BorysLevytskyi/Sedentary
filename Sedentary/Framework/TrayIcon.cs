@@ -28,17 +28,8 @@ namespace Sedentary.Framework
 			{
 				if (_cfg.GetHashCode() == value.GetHashCode())
 				{
-//					Tracer.Write("Icon is the same");
 					return;
 				}
-//
-//				Tracer.Write("Icon is unequal");
-//
-//				Tracer.Write("New");
-//				Tracer.WriteObject(value);
-//
-//				Tracer.Write("Old");
-//				Tracer.WriteObject(_cfg);
 
 				_cfg = value;
 
@@ -85,7 +76,7 @@ namespace Sedentary.Framework
 			}
 			else
 			{
-				Icon = Icon.SetOverlay(Icon.OverlayColor, 0);
+				Icon = Icon.SetOverlay(Icon.OverlayColor, 0).SetWorkState(_stats.CurrentPeriod.State);
 			}
 		}
 
