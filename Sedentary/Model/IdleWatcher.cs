@@ -1,74 +1,52 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Windows.Threading;
-using SittingTracker.Framework;
+using Sedentary.Framework;
 
-namespace SittingTracker.Model
+namespace Sedentary.Model
 {
 	public class IdleWatcher
 	{
-		private static Countdown _countdown;
-		private static ClientIdleHandler _handler;
-		private bool _isIdle;
+		private readonly ClientIdleHandler _handler;
+		private TimeSpan _lastInput;
 
-		public IdleWatcher(TimeSpan maxIdleTime)
+		public IdleWatcher()
 		{
-			_countdown = new Countdown((int) maxIdleTime.TotalSeconds);
 			_handler = new ClientIdleHandler();
 		}
 
-		public bool IsIdle
+		public TimeSpan IdleTime
 		{
-			get { return _isIdle; }
+			get { return DateTime.Now.TimeOfDay - _lastInput; }
 		}
+
+		public event Action<TimeSpan> IdleEnd;
 
 		public event Action IdleStart;
 
-		public event Action IdleEnd;
+		public event Action<TimeSpan> UserActive;
 
-		private void OnUserReturned()
+		public void StartDetection()
 		{
-			_isIdle = false;
-			Action handler = IdleEnd;
-			if (handler != null) handler();
-			Tracer.TraceMe("Idle ended");
-		}
-
-		private void OnUserAway()
-		{
-			_isIdle = true;
-			Action handler = IdleStart;
-			if (handler != null) handler();
-
-			Tracer.TraceMe("Idle started");
-		}
-
-		public void StartDetection(DispatcherTimer timer)
-		{
-			timer.Tick += TimerOnTick;
-			_countdown.Done += OnUserAway;
-			_handler.UserActive += OnIdleOnUserActive;
+			_lastInput = DateTime.Now.TimeOfDay;
+			_handler.UserActive += OnUserInput;
 			_handler.Start();
 		}
 
-		private void OnIdleOnUserActive()
+		private void OnUserInput()
 		{
-			_countdown.Reset();
-
-			if (IsIdle)
-			{
-				OnUserReturned();
-			}
+			var period = IdleTime;
+			_lastInput = DateTime.Now.TimeOfDay;
+			OnUserActive(period);
 		}
 
-		private void TimerOnTick(object sender, EventArgs eventArgs)
+		public void Dispose()
 		{
-			_countdown.Decrement();
+			_handler.Dispose();
 		}
 
-	    public void Dispose()
-	    {
-	        _handler.Dispose();
-	    }
+		protected virtual void OnUserActive(TimeSpan period)
+		{
+			var handler = UserActive;
+			if (handler != null) handler(period);
+		}
 	}
 }

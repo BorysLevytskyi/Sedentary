@@ -1,6 +1,6 @@
 using System;
 
-namespace SittingTracker.Framework
+namespace Sedentary.Framework
 {
 	public class Countdown
 	{

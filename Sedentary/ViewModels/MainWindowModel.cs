@@ -1,35 +1,33 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Documents;
-using SittingTracker.Model;
-using SittingTracker.Properties;
+using System.Text;
+using Sedentary.Framework;
+using Sedentary.Model;
+using Sedentary.Properties;
 
-namespace SittingTracker
+namespace Sedentary.ViewModels
 {
 	public class MainWindowModel : INotifyPropertyChanged
 	{
 		private readonly Statistics _stats;
+		private StringBuilder _traceOutput;
+		private TraceEventWriter _listener;
 
 		public MainWindowModel(Statistics stats)
 		{
 			_stats = stats;
 			_stats.Changed += Refresh;
-		}
+			_stats.Periods.CollectionChanged += (s, o) => OnPropertyChanged("Periods");
 
-		public event PropertyChangedEventHandler PropertyChanged;
+			ListenForTrace();
+		}
 
 		public bool IsSitting
 		{
 			get { return _stats.IsSitting; }
-		}
-
-		public bool IsStanding
-		{
-			get { return !IsSitting; }
 		}
 
 		public string TotalSittingTime
@@ -42,9 +40,9 @@ namespace SittingTracker
 			get { return _stats.CurrentPeriod; }
 		}
 
-		public IEnumerable<WorkPeriod> Periods
+		public List<WorkPeriod> Periods
 		{
-			get { return _stats.Periods; }
+			get { return _stats.Periods.ToList(); }
 		}
 
 		public bool IsSittingLimitExceeded
@@ -52,13 +50,19 @@ namespace SittingTracker
 			get { return _stats.IsSittingLimitExceeded; }
 		}
 
+		public List<TraceEvent> TraceEvents
+		{
+			get { return _listener.Events; }		
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
 		public void Refresh()
 		{
 			OnPropertyChanged("TotalSittingTime");
 			OnPropertyChanged("CurrentPeriod");
 			OnPropertyChanged("IsSittingLimitExceeded");
 			OnPropertyChanged("Status");
-			OnPropertyChanged("Periods");
 		}
 
 		[NotifyPropertyChangedInvocator]
@@ -66,6 +70,17 @@ namespace SittingTracker
 		{
 			PropertyChangedEventHandler handler = PropertyChanged;
 			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		private void ListenForTrace()
+		{
+			_traceOutput = new StringBuilder();
+			_traceOutput.AppendLine("Trace:");
+
+			_listener = new TraceEventWriter();
+			_listener.Update += () => OnPropertyChanged("TraceEvents");
+
+			Trace.Listeners.Add(_listener);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace SittingTracker.Framework.Converter
+namespace Sedentary.Framework.Converter
 {
 	public class TimeSpanToWidthConverter : IValueConverter
 	{
@@ -10,7 +10,7 @@ namespace SittingTracker.Framework.Converter
 		{
 			var ts = (TimeSpan) value;
 			const int totalWidth = 600;
-			double percent = ((double)ts.Ticks / (double)TimeSpan.FromMinutes(1).Ticks);
+			double percent = ((double)ts.Ticks / (double)TimeSpan.FromHours(8).Ticks);
 			return (int)(totalWidth*percent);
 		}
 

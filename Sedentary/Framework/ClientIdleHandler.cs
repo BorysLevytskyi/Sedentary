@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace SittingTracker.Framework
+namespace Sedentary.Framework
 {
 	// Taken from: http://weblogs.asp.net/jdanforth/detecting-idle-time-with-global-mouse-and-keyboard-hooks-in-wpf
 	public class ClientIdleHandler : IDisposable
@@ -69,8 +69,8 @@ namespace SittingTracker.Framework
 			catch (Exception ex)
 			{
 				
-				Tracer.TraceMe("Error");
-				Tracer.TraceMe(ex.ToString());
+				Tracer.Write("Error");
+				Tracer.Write(ex.ToString());
 				return 0;
 			}
 

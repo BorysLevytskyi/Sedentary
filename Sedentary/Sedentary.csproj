@@ -65,12 +65,16 @@
     <Compile Include="Framework\ClientIdleHandler.cs" />
     <Compile Include="Framework\Converter\TimeSpanToWidthConverter.cs" />
     <Compile Include="Framework\Countdown.cs" />
+    <Compile Include="Framework\IconConfig.cs" />
+    <Compile Include="Framework\IconProvider.cs" />
+    <Compile Include="Framework\TraceEventWriter.cs" />
+    <Compile Include="Framework\TraceListenerWithEventInvokation.cs" />
     <Compile Include="Model\Statistics.cs" />
     <Compile Include="Model\IdleWatcher.cs" />
     <Compile Include="Framework\Tracer.cs" />
-    <Compile Include="Model\WorkController.cs" />
+    <Compile Include="Model\WorkTracker.cs" />
     <Compile Include="Framework\TrayIcon.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -78,13 +82,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainWindowModel.cs" />
+    <Compile Include="ViewModels\MainWindowModel.cs" />
     <Compile Include="Model\WorkPeriod.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -116,18 +120,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="appicon.ico" />
-    <Content Include="away.png">
+    <EmbeddedResource Include="away.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="sitting.png">
+    </EmbeddedResource>
+    <EmbeddedResource Include="sitting.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
     <Content Include="sitting_bad.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="standing.jpg">
+    <EmbeddedResource Include="standing.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

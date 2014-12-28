@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
+using Sedentary.Framework;
 
-namespace SittingTracker.Model
+namespace Sedentary.Model
 {
 	public class WorkPeriod
 	{

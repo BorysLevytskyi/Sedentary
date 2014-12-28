@@ -2,55 +2,91 @@
 using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
-using SittingTracker.Model;
+using Sedentary.Model;
 using Application = System.Windows.Application;
 
-namespace SittingTracker.Framework
+namespace Sedentary.Framework
 {
-	public class TrayIcon
+	public class TrayIcon : IDisposable
 	{
 		private readonly Statistics _stats;
+		private IconConfig _cfg;
+
+		private NotifyIcon _icon;
 
 		public TrayIcon(Statistics stats)
 		{
 			_stats = stats;
 		}
 
-		private NotifyIcon _icon;
+		public event Action OnPositionSwitch;
 
-		public void UpdateIcon()
+		private IconConfig Icon
+		{
+			get { return _cfg; }
+			set
+			{
+				if (_cfg.GetHashCode() == value.GetHashCode())
+				{
+//					Tracer.Write("Icon is the same");
+					return;
+				}
+//
+//				Tracer.Write("Icon is unequal");
+//
+//				Tracer.Write("New");
+//				Tracer.WriteObject(value);
+//
+//				Tracer.Write("Old");
+//				Tracer.WriteObject(_cfg);
+
+				_cfg = value;
+
+				UpdateIcon();
+			}
+		}
+
+		public void Dispose()
+		{
+			if (_icon != null)
+			{
+				_icon.Dispose();
+				_icon = null;
+			}
+		}
+
+		private void UpdateIcon()
 		{
 			if (_icon.Icon != null)
 			{
 				_icon.Icon.Dispose();
 			}
 
-			var image = new Bitmap(GetIconPath());
-			_icon.Icon = Icon.FromHandle(image.GetHicon());
+			Bitmap bitmap = IconProvider.GetIconImage(_cfg);
 
-			UpdateTooltip();
+			_icon.Icon = System.Drawing.Icon.FromHandle(bitmap.GetHicon());
 
-			Tracer.TraceMe("Icon updated");
+			Tracer.Write("Icon updated");
 		}
 
-	    public void ShowWarning()
-	    {
-	        _icon.ShowBalloonTip(5000, "Reminder", string.Format(@"You've been sitting for {0:h\h\ m\m}.", _stats.SessionTime), ToolTipIcon.Warning);
-	    }
-
-		private string GetIconPath()
+		public void ShowWarning()
 		{
-			if (_stats.IsUserAway)
-			{
-				return "away.png";
-			}
+			_icon.ShowBalloonTip(5000, "Reminder", string.Format(@"You've been sitting for {0:h\h\ m\m}.", _stats.SessionTime),
+				ToolTipIcon.Warning);
+		}
 
+		public void Refresh()
+		{
 			if (_stats.IsSitting)
 			{
-				return _stats.IsSittingLimitExceeded ? "sitting_bad.png" : "sitting.png";
+				Icon =
+					Icon.SetOverlay(Color.Red, (int) Math.Round(16*_stats.SittingTimeCompletionRate))
+						.SetWorkState(_stats.CurrentPeriod.State);
 			}
-
-			return "standing.jpg";
+			else
+			{
+				Icon = Icon.SetOverlay(Icon.OverlayColor, 0);
+			}
 		}
 
 		public void Init()
@@ -63,7 +99,7 @@ namespace SittingTracker.Framework
 			_icon.MouseMove += OnIconMouseMove;
 		}
 
-		void OnIconMouseMove(object sender, MouseEventArgs e)
+		private void OnIconMouseMove(object sender, MouseEventArgs e)
 		{
 			UpdateTooltip();
 		}
@@ -89,8 +125,6 @@ namespace SittingTracker.Framework
 				}
 			}
 		}
-
-		public event Action OnPositionSwitch;
 
 		protected virtual void OnSittingSwitch()
 		{

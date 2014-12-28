@@ -1,18 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using Sedentary.Framework;
 
-namespace SittingTracker.Model
+namespace Sedentary.Model
 {
 	public class Statistics
 	{
 		public Statistics()
 		{
-			_periods = new List<WorkPeriod>();
+			_periods = new ObservableCollection<WorkPeriod>();
 			StartPeriod(new WorkPeriod(WorkState.Sitting, DateTime.Now.TimeOfDay));
 		}
 
-		public bool IsUserAway
+		public bool IsAway
 		{
 			get { return _currentPeriod.State == WorkState.Away; }
 		}
@@ -35,7 +37,29 @@ namespace SittingTracker.Model
 		// TODO: Move to notification controller
 		public bool IsSittingLimitExceeded
 		{
-			get { return _currentPeriod.State == WorkState.Sitting && _currentPeriod.Length >= SittingLimit; }
+			get { return _currentPeriod.State == WorkState.Sitting && _currentPeriod.Length >= WorkTracker.MaxSittingTime; }
+		}
+
+		public double SittingTimeCompletionRate
+		{
+			get { return IsSitting ? Math.Round((double)_currentPeriod.Length.Ticks / WorkTracker.MaxSittingTime.Ticks, 2) : 0; }
+		}
+
+		// TODO: Implement cooldown minutes per sitting minutes
+		public double CoolDownRate
+		{
+			get
+			{
+				double rate = 0;
+				
+				if (_prevPeriod.State == WorkState.Sitting)
+				{
+					rate = Math.Min(1, (double)_currentPeriod.Length.Ticks / (double)WorkTracker.Cooldown.Ticks);
+				}
+
+				Tracer.WritePropertyValue(rate);
+				return rate;
+			}
 		}
 
 		public TimeSpan SessionTime
@@ -43,7 +67,7 @@ namespace SittingTracker.Model
 			get { return _currentPeriod.Length; }
 		}
 
-		public IEnumerable<WorkPeriod> Periods
+		public ObservableCollection<WorkPeriod> Periods
 		{
 			get { return _periods; }
 		}
@@ -59,6 +83,7 @@ namespace SittingTracker.Model
 		public void SetState(WorkState state)
 		{
 			StartPeriod(new WorkPeriod(state, DateTime.Now.TimeOfDay));
+			Tracer.Write("Work State changed to: {0}", state);
 			OnChanged();
 		}
 
@@ -69,11 +94,11 @@ namespace SittingTracker.Model
 				_currentPeriod.End();
 			}
 
+			_prevPeriod = _currentPeriod;
 			_periods.Add(_currentPeriod = period);
 		}
 
-		private readonly TimeSpan SittingLimit = TimeSpan.FromMinutes(60);
-		private readonly List<WorkPeriod> _periods;
+		private readonly ObservableCollection<WorkPeriod> _periods;
 		private WorkPeriod _currentPeriod;
 		private WorkPeriod _prevPeriod;
 

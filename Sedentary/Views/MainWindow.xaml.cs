@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
+using Sedentary.Framework;
+using Sedentary.ViewModels;
 
-namespace SittingTracker
+namespace Sedentary.Views
 {
 	/// <summary>
 	///     Interaction logic for MainWindow.xaml
@@ -13,8 +15,10 @@ namespace SittingTracker
 
 		public MainWindow()
 		{
+			Tracer.WriteMethod();
+
 			InitializeComponent();
-			DataContext = new MainWindowModel(App.Controller.Statistics);
+			DataContext = new MainWindowModel(App.Tracker.Statistics);
 
 			StartTimer();
 		}

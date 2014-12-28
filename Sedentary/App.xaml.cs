@@ -1,35 +1,36 @@
 ﻿using System.Windows;
-using SittingTracker.Framework;
-using SittingTracker.Model;
+using Sedentary.Framework;
+using Sedentary.Model;
 
-namespace SittingTracker
+namespace Sedentary
 {
 	/// <summary>
 	/// Interaction logic for App.xaml
 	/// </summary>
 	public partial class App : Application
 	{
-		private static WorkController _controller;
+		private static WorkTracker _tracker;
 
-		public static WorkController Controller
+		public static WorkTracker Tracker
 		{
-			get { return _controller; }
+			get { return _tracker; }
 		}
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
+			Tracer.WriteMethod();
+
 			base.OnStartup(e);
 
-			_controller = new WorkController();
-			_controller.Start();
+			_tracker = new WorkTracker();
+			_tracker.Start();
 		}
 
 	    protected override void OnExit(ExitEventArgs e)
 	    {
 	        base.OnExit(e);
 
-            _controller.Dispose();
-			Tracer.Stop();
+            _tracker.Dispose();
 	    }
 	}
 }
