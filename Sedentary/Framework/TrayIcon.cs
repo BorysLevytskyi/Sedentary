@@ -71,7 +71,7 @@ namespace Sedentary.Framework
 			if (_stats.IsSitting)
 			{
 				Icon =
-					Icon.SetOverlay(Color.Red, (int) Math.Round(16*_stats.SittingTimeCompletionRate))
+					Icon.SetOverlay(Color.Red, (int) Math.Floor(16*_stats.SittingTimeCompletionRate))
 						.SetWorkState(_stats.CurrentPeriod.State);
 			}
 			else
