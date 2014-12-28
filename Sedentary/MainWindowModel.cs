@@ -13,13 +13,11 @@ namespace SittingTracker
 	public class MainWindowModel : INotifyPropertyChanged
 	{
 		private readonly Statistics _stats;
-		private readonly BindingList<WorkPeriod> _periods;
 
 		public MainWindowModel(Statistics stats)
 		{
 			_stats = stats;
 			_stats.Changed += Refresh;
-			_periods = new BindingList<WorkPeriod>();
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -44,7 +42,7 @@ namespace SittingTracker
 			get { return _stats.CurrentPeriod; }
 		}
 
-		public IEnumerable Periods
+		public IEnumerable<WorkPeriod> Periods
 		{
 			get { return _stats.Periods; }
 		}
@@ -61,12 +59,6 @@ namespace SittingTracker
 			OnPropertyChanged("IsSittingLimitExceeded");
 			OnPropertyChanged("Status");
 			OnPropertyChanged("Periods");
-
-			// TODO: Redo this
-			foreach (var p in _stats.Periods.Where(p => !_periods.Contains(p)))
-			{
-				_periods.Add(p);
-			}
 		}
 
 		[NotifyPropertyChangedInvocator]

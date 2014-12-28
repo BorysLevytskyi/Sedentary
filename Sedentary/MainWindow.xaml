@@ -50,7 +50,7 @@
 			</ItemsControl.Resources>
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
-					<TextBlock Style="{StaticResource Period}" Width="{Binding Length, Converter={StaticResource SpanToWidthConverter}}">
+					<TextBlock Style="{StaticResource Period}">
 						<TextBlock.Text>
 							<Binding Path="State" />
 						</TextBlock.Text>
