@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Sedentary.Framework;
 using Sedentary.Model;
+using Sedentary.Model.Persistence;
 
 namespace Sedentary
 {
@@ -26,13 +27,13 @@ namespace Sedentary
 			_tracker.Start();
 		}
 
-	    protected override void OnExit(ExitEventArgs e)
-	    {
-	        base.OnExit(e);
+		protected override void OnExit(ExitEventArgs e)
+		{
+			base.OnExit(e);
 
 			StatsRepo.Save(_tracker.Statistics);
-            _tracker.Dispose();
+			_tracker.Dispose();
 			
-	    }
+		}
 	}
 }

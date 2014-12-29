@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Threading;
 using Sedentary.Framework;
+using Sedentary.Model.Persistence;
 
 namespace Sedentary.Model
 {

@@ -1,9 +1,9 @@
 ﻿<Window x:Class="Sedentary.Views.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:converter="clr-namespace:Sedentary.Framework.Converter"
-        xmlns:model="clr-namespace:Sedentary.Model"
-        Title="MainWindow" Height="350" Width="525" Padding="20">
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:converter="clr-namespace:Sedentary.Framework.Converter"
+		xmlns:model="clr-namespace:Sedentary.Model"
+		Title="MainWindow" Height="350" Width="525" Padding="20">
 	<Window.Resources>
 		<converter:TimeSpanToWidthConverter x:Key="SpanToWidthConverter"></converter:TimeSpanToWidthConverter>
 	</Window.Resources>
@@ -64,6 +64,22 @@
 					</ItemsControl>
 				</Border>				
 			</StackPanel>
+		</TabItem>
+		<TabItem Header="Periods">
+			<ItemsControl ItemsSource="{Binding Periods}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate DataType="model:WorkPeriod">
+						<TextBlock>
+							<TextBlock.Text>
+								<MultiBinding StringFormat="{}{0} for {1:h\h\ m\m}">
+									<Binding Path="State" />
+									<Binding Path="Length" />
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
 		</TabItem>
 	</TabControl>
 </Window>

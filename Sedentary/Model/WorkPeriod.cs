@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Sedentary.Model
 {
-	[Serializable]
 	public class WorkPeriod
 	{
 		private readonly WorkState _state;
@@ -12,10 +12,14 @@ namespace Sedentary.Model
 		public WorkPeriod()
 		{}
 
-		public WorkPeriod(WorkState state, TimeSpan startTime)
+		public WorkPeriod(WorkState state, TimeSpan startTime) : this(state, startTime, TimeSpan.Zero)
+		{}
+
+		public WorkPeriod(WorkState state, TimeSpan startTime, TimeSpan endTime)
 		{
 			_state = state;
 			_startTime = startTime;
+			_endTime = endTime;
 		}
 
 		public WorkState State
@@ -50,6 +54,8 @@ namespace Sedentary.Model
 
 		public void End()
 		{
+		    Debug.Assert(!IsCompleted, "Trying to end already completed period");
+
 			_endTime = DateTime.Today.TimeOfDay;
 		}
 
