@@ -3,10 +3,10 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:model="clr-namespace:Sedentary.Model"
 		xmlns:controls="clr-namespace:Sedentary.Views.Controls"
-		Title="MainWindow" Height="350" Width="525" Padding="20" Name="Main">
-	<TabControl>
+		Title="Sitting Tracker" Height="350" Width="525" Name="Main">
+	<TabControl Margin="10">
 		<TabItem Header="Stats">
-			<StackPanel>
+			<StackPanel Margin="10">
 				<TextBlock FontWeight="Bold" FontSize="32">
 					<TextBlock.Text>
 						<MultiBinding StringFormat="{}{0} for {1:hh\:mm\:ss}">
@@ -29,7 +29,7 @@
 				<TextBlock Text="{Binding TotalSittingTime, StringFormat={}Total Sitting Today: {0}}" FontWeight="Bold" FontSize="18" />
 
 			
-				<controls:PeriodsChart WorkPeriods="{Binding DataContext.Periods, ElementName=Main}" />
+				<controls:PeriodsChart WorkPeriods="{Binding DataContext.Periods, ElementName=Main}" Margin="10 20 10 10" />
 				
 			</StackPanel>
 		</TabItem>

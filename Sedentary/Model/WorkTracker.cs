@@ -9,13 +9,13 @@ namespace Sedentary.Model
 	{
 		public readonly Requirements Requirements = new Requirements
 		{
-			AwayThreshold = TimeSpan.FromSeconds(60),
-			MaxSittingTime = TimeSpan.FromSeconds(600),
-			RequiredRestingTime = TimeSpan.FromSeconds(30)
-
 //			AwayThreshold = TimeSpan.FromSeconds(60),
-//			MaxSittingTime = TimeSpan.FromHours(1),
-//			RequiredRestingTime = TimeSpan.FromMinutes(5)
+//			MaxSittingTime = TimeSpan.FromSeconds(600),
+//			RequiredRestingTime = TimeSpan.FromSeconds(30)
+
+			AwayThreshold = TimeSpan.FromSeconds(60),
+			MaxSittingTime = TimeSpan.FromHours(1),
+			RequiredRestingTime = TimeSpan.FromMinutes(5)
 		};
 
 		private IdleWatcher _idleWatcher;

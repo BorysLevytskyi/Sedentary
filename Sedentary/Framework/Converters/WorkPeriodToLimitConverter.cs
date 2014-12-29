@@ -10,7 +10,8 @@ namespace Sedentary.Framework.Converters
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var p = (WorkPeriod) value;
-			return p.State == WorkState.Sitting && (p.Length + TimeSpan.FromMinutes(5)) > App.Tracker.Requirements.MaxSittingTime;
+			TimeSpan limit = App.Tracker.Requirements.MaxSittingTime + TimeSpan.FromMinutes(5);
+			return p.State == WorkState.Sitting && (p.Length) > limit;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

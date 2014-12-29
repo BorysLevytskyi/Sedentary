@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -15,6 +16,8 @@ namespace Sedentary.Framework.Converters
 
 			var rate = timeSpan.GetCompletionRateFor(timeScale);
 			double width = Math.Round(actualWidth * rate, 1);
+
+			Tracer.Write("Timespan " + timeSpan);
 
 			return Math.Max(1, width);
 		}
