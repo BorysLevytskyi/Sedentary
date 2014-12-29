@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using Sedentary.Framework;
 using Sedentary.Model;
 using Sedentary.Model.Persistence;
@@ -33,7 +34,8 @@ namespace Sedentary
 
 			StatsRepo.Save(_tracker.Statistics);
 			_tracker.Dispose();
-			
+
+			Trace.Flush();
 		}
 	}
 }

@@ -11,7 +11,13 @@ namespace Sedentary.Model
 		public Statistics(IList<WorkPeriod> periods)
 		{
 			_periods = new ObservableCollection<WorkPeriod>(periods);
-			_currentPeriod = periods.FirstOrDefault(p => !p.IsCompleted);
+
+			_currentPeriod = periods.FirstOrDefault(p => !p.IsCompleted) ?? WorkPeriod.Start(WorkState.Sitting);
+
+			if (!_periods.Any())
+			{
+				_periods.Add(_currentPeriod);
+			}
 		}
 
 		public Statistics()

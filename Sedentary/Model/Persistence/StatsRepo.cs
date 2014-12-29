@@ -102,7 +102,5 @@ namespace Sedentary.Model.Persistence
 
 		private static readonly Lazy<string> DirPath = new Lazy<string>(() => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sedentary"));
 		private static readonly Lazy<string> FilePath = new Lazy<string>(() => Path.Combine(DirPath.Value, "Stats.xml"));
-
-		private const string StatsPath = @"%LOCALAPPDATA%\Sedentary\Stats.xml";
 	}
 }
