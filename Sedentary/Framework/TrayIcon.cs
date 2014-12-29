@@ -70,8 +70,26 @@ namespace Sedentary.Framework
 
 		public void Refresh()
 		{
-			int overlayHeight = (int)Math.Floor(16d * _analyzer.GetSittingPressureRate());
-			Icon = Icon.SetOverlay(Color.Red, overlayHeight).SetWorkState(_stats.CurrentState);
+			var pressureRate = _analyzer.GetSittingPressureRate();
+			int overlayHeight = (int)Math.Floor(16d * pressureRate);
+			var color = GetColor(pressureRate);
+
+			Icon = Icon.SetOverlay(color, overlayHeight).SetWorkState(_stats.CurrentState);
+		}
+
+		private Color GetColor(double rate)
+		{
+			if (rate <= 0.5d)
+			{
+				return Color.Green;
+			}
+
+			if (rate <= 0.8d)
+			{
+				return Color.Orange;
+			}
+
+			return Color.Red;
 		}
 
 		public void Init()

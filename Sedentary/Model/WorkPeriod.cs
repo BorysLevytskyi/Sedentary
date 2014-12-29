@@ -53,18 +53,19 @@ namespace Sedentary.Model
 			get { return _endTime > TimeSpan.Zero; }
 		}
 
-		public void End()
+		public void End(TimeSpan endTime)
 		{
 			Debug.Assert(!IsCompleted, "Trying to end already completed period");
-			Tracer.Write("{0} period ended", this);
 
-			_endTime = DateTime.Now.TimeOfDay;
+			_endTime = endTime;
+
+			Tracer.Write("Period ended: {0}", this);
 		}
 
 		public override string ToString()
 		{
-			return string.Format(@"{0}: {1:hh\:mm\:ss} - {2:hh\:mm\:ss}", _state, _startTime,
-				IsCompleted ? _endTime : DateTime.Now.TimeOfDay);
+			return string.Format(@"{0}: {1:hh\:mm\:ss} - {2:hh\:mm\:ss}. Length: {3}", _state, _startTime,
+				IsCompleted ? _endTime : DateTime.Now.TimeOfDay, Length);
 		}
 
 	    public static WorkPeriod Start(WorkState state)

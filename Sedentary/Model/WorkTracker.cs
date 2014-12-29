@@ -10,12 +10,15 @@ namespace Sedentary.Model
 		public readonly Requirements Requirements = new Requirements
 		{
 			AwayThreshold = TimeSpan.FromSeconds(60),
-			MaxSittingTime = TimeSpan.FromHours(1),
-			RequiredRestingTime = TimeSpan.FromMinutes(5)
+			MaxSittingTime = TimeSpan.FromSeconds(600),
+			RequiredRestingTime = TimeSpan.FromSeconds(30)
+
+//			AwayThreshold = TimeSpan.FromSeconds(60),
+//			MaxSittingTime = TimeSpan.FromHours(1),
+//			RequiredRestingTime = TimeSpan.FromMinutes(5)
 		};
 
 		private IdleWatcher _idleWatcher;
-		private WorkState _lastState;
 		private Statistics _stats;
 		private DispatcherTimer _timer;
 		private Analyzer _analyzer;
@@ -69,13 +72,14 @@ namespace Sedentary.Model
 		{
 			if (_stats.CurrentState == WorkState.Away)
 			{
+				Tracer.Write("User returned. Idle time was: {0}", idleTime);
 				RestoreLastState();
 			}
 		}
 
 		private void RestoreLastState()
 		{
-			SetState(_lastState);
+			SetState(_stats.PreviousPeriod.State);
 		}
 
 		private void OnPositionSwitch()
@@ -85,8 +89,15 @@ namespace Sedentary.Model
 
 		private void SetState(WorkState workState)
 		{
-			_lastState = _stats.CurrentState;
-			_stats.SetState(workState);
+			TimeSpan startTime = DateTime.Now.TimeOfDay;
+
+			if (workState == WorkState.Away)
+			{
+				startTime = DateTime.Now.TimeOfDay.Subtract(Requirements.AwayThreshold);
+			}
+
+			_stats.SetState(workState, startTime);
+
 			_tray.Refresh();
 		}
 
@@ -101,7 +112,7 @@ namespace Sedentary.Model
 				}
 			}
 
-			if (_stats.IsAway && _idleWatcher.IdleTime >= Requirements.AwayThreshold)
+			if (!_stats.IsAway && _idleWatcher.IdleTime >= Requirements.AwayThreshold)
 			{
 				Tracer.Write("Detected idle time");
 				SetState(WorkState.Away);

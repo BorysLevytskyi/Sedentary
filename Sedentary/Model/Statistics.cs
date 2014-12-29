@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using Sedentary.Framework;
 
@@ -28,7 +29,7 @@ namespace Sedentary.Model
 		{
 			_periods = new ObservableCollection<WorkPeriod>();
 
-			StartPeriod(new WorkPeriod(WorkState.Sitting, DateTime.Now.TimeOfDay));
+			SetState(WorkState.Sitting);
 		}
 
 		public bool IsAway
@@ -81,27 +82,36 @@ namespace Sedentary.Model
 
 		public void SetState(WorkState state)
 		{
-			StartPeriod(new WorkPeriod(state, DateTime.Now.TimeOfDay));
-			Tracer.Write("Work State changed to: {0}", state);
-			OnChanged();
+			SetState(state, DateTime.Now.TimeOfDay);
 		}
 
-		private void StartPeriod(WorkPeriod period)
+		public void SetState(WorkState state, TimeSpan startTime)
 		{
+			var newPeriod = new WorkPeriod(state, startTime);
+
 			if (_currentPeriod != null)
 			{
-				_currentPeriod.End();
+				_currentPeriod.End(newPeriod.StartTime);
 			}
 
 			_prevPeriod = _currentPeriod;
-			_periods.Add(_currentPeriod = period);
+			_periods.Add(_currentPeriod = newPeriod);
+
+			Tracer.Write("----");
+			Tracer.Write("Current time: {0}", DateTime.Now.TimeOfDay);
+			Tracer.Write("Start time: {0}", startTime);
+			Tracer.Write("Work State changed to: {0}", state);
+			Tracer.Write("New period: {0}", newPeriod);
+			Tracer.Write("Session Time being: {0}", this.CurrentPeriodLength);
+
+			OnChanged();
 		}
 
 		public void RestoreState()
 		{
 			if (_prevPeriod != null)
 			{
-				StartPeriod(_prevPeriod);
+				SetState(_prevPeriod.State, DateTime.Now.TimeOfDay);
 			}
 		}
 	}

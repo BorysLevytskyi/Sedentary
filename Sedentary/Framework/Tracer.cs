@@ -40,7 +40,6 @@ namespace Sedentary.Framework
 
 		public static void WritePropertyValue(object propertyValue, [CallerMemberName] string propertyName = null)
 		{
-			var stack = new StackTrace();
 			var className = GetCallingMember().DeclaringType.Name;
 			Trace.WriteLine(string.Format(@"{0:hh\:mm\:ss} {1}: {2}={3}", DateTime.Now.TimeOfDay, className, propertyName, propertyValue));
 			Trace.Flush();

@@ -9,6 +9,5 @@ namespace Sedentary.Model
 		public TimeSpan AwayThreshold { get; set; }
 
 		public TimeSpan RequiredRestingTime { get; set; }
-
 	}
 }

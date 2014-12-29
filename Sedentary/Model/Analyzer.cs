@@ -39,31 +39,19 @@ namespace Sedentary.Model
 			var sittingPeriod = _stats.PreviousPeriod;
 			var timeResting = DateTime.Now.TimeOfDay - sittingPeriod.EndTime;
 
-			double accumulatedSittingPressureRate = Math.Max(sittingPeriod.Length.GetCompletionRateFor(_requirements.MaxSittingTime), 1); // Pressure rate that was accumulated previously sitting
-			double restingToSittingRate = Math.Round((double)_requirements.RequiredRestingTime.Ticks / _requirements.MaxSittingTime.Ticks, 2);
-
-			Trace.Indent();
-			Tracer.Write("Resting to sitting rate is: {0}", restingToSittingRate);
+			double accumulatedSittingPressureRate = 
+				Math.Min(sittingPeriod.Length.GetCompletionRateFor(_requirements.MaxSittingTime), 1); // Pressure rate that was accumulated previously sittin
 
 			var restingRate = timeResting.GetCompletionRateFor(_requirements.RequiredRestingTime);
 
 			if ((int) restingRate == 1)
 			{
-				Trace.Unindent();
 				return 0;
 			}
 
-			Tracer.Write("Resting rate = {0}", restingRate);
-
 			double pressureRate = 1 - restingRate;
-
-			Tracer.Write("Pressure rate = {0}", pressureRate);
-
 			pressureRate = pressureRate*accumulatedSittingPressureRate;
 
-			Tracer.Write("Pressure rate adjusted by sitting pressure {0} = {1}", accumulatedSittingPressureRate, pressureRate);
-
-			Trace.Unindent();
 
 			return Math.Max(0, pressureRate);
 		}
