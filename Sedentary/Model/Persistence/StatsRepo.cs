@@ -98,7 +98,7 @@ namespace Sedentary.Model.Persistence
 			}
 		}
 
-		private const string TimeSpanPersistFormat = @"hh\:mm";
+		private const string TimeSpanPersistFormat = @"hh\:mm\:ss";
 
 		private static readonly Lazy<string> DirPath = new Lazy<string>(() => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sedentary"));
 		private static readonly Lazy<string> FilePath = new Lazy<string>(() => Path.Combine(DirPath.Value, "Stats.xml"));

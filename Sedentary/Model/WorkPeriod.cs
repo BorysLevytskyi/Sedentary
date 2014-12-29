@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Sedentary.Framework;
 
 namespace Sedentary.Model
 {
@@ -54,7 +55,8 @@ namespace Sedentary.Model
 
 		public void End()
 		{
-		    Debug.Assert(!IsCompleted, "Trying to end already completed period");
+			Debug.Assert(!IsCompleted, "Trying to end already completed period");
+			Tracer.Write("{0} period ended", this);
 
 			_endTime = DateTime.Today.TimeOfDay;
 		}

@@ -72,10 +72,6 @@ namespace Sedentary.Framework
 			{
 				int overlayHeight = (int) Math.Floor(16d *_stats.SittingTimeCompletionRate);
 
-				Tracer.Write("Overlay height calculated to be {0} upon completion rate {1}", 
-					overlayHeight,
-					_stats.SittingTimeCompletionRate);
-
 				Icon =
 					Icon.SetOverlay(Color.Red, overlayHeight)
 						.SetWorkState(_stats.CurrentPeriod.State);
