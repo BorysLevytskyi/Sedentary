@@ -14,16 +14,15 @@ namespace Sedentary.ViewModels
 	public class MainWindowModel : INotifyPropertyChanged
 	{
 		private readonly Statistics _stats;
+		private readonly Analyzer _analyzer;
 		private StringBuilder _traceOutput;
-		private TraceEventWriter _listener;
 
-		public MainWindowModel(Statistics stats)
+		public MainWindowModel(Statistics stats, Analyzer analyzer)
 		{
 			_stats = stats;
+			_analyzer = analyzer;
 			_stats.Changed += Refresh;
 			_stats.Periods.CollectionChanged += (s, o) => OnPropertyChanged("Periods");
-
-			ListenForTrace();
 		}
 
 		public bool IsSitting
@@ -48,12 +47,7 @@ namespace Sedentary.ViewModels
 
 		public bool IsSittingLimitExceeded
 		{
-			get { return _stats.IsSittingLimitExceeded; }
-		}
-
-		public List<TraceEvent> TraceEvents
-		{
-			get { return _listener.Events; }		
+			get { return _analyzer.IsSittingLimitExceeded; }
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -71,17 +65,6 @@ namespace Sedentary.ViewModels
 		{
 			PropertyChangedEventHandler handler = PropertyChanged;
 			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		private void ListenForTrace()
-		{
-			_traceOutput = new StringBuilder();
-			_traceOutput.AppendLine("Trace:");
-
-			_listener = new TraceEventWriter();
-			_listener.Update += () => OnPropertyChanged("TraceEvents");
-
-			Trace.Listeners.Add(_listener);
 		}
 	}
 }

@@ -10,13 +10,15 @@ namespace Sedentary.Framework
 	public class TrayIcon : IDisposable
 	{
 		private readonly Statistics _stats;
+		private readonly Analyzer _analyzer;
 		private IconConfig _cfg;
 
 		private NotifyIcon _icon;
 
-		public TrayIcon(Statistics stats)
+		public TrayIcon(Statistics stats, Analyzer analyzer)
 		{
 			_stats = stats;
+			_analyzer = analyzer;
 		}
 
 		public event Action OnPositionSwitch;
@@ -62,24 +64,14 @@ namespace Sedentary.Framework
 
 		public void ShowWarning()
 		{
-			_icon.ShowBalloonTip(5000, "Reminder", string.Format(@"You've been sitting for {0:h\h\ m\m}.", _stats.SessionTime),
+			_icon.ShowBalloonTip(5000, "Reminder", string.Format(@"You've been sitting for {0:h\h\ m\m}.", _stats.CurrentPeriodLength),
 				ToolTipIcon.Warning);
 		}
 
 		public void Refresh()
 		{
-			if (_stats.IsSitting)
-			{
-				int overlayHeight = (int) Math.Floor(16d *_stats.SittingTimeCompletionRate);
-
-				Icon =
-					Icon.SetOverlay(Color.Red, overlayHeight)
-						.SetWorkState(_stats.CurrentPeriod.State);
-			}
-			else
-			{
-				Icon = Icon.SetOverlay(Icon.OverlayColor, 0).SetWorkState(_stats.CurrentPeriod.State);
-			}
+			int overlayHeight = (int)Math.Floor(16d * _analyzer.GetSittingPressureRate());
+			Icon = Icon.SetOverlay(Color.Red, overlayHeight).SetWorkState(_stats.CurrentState);
 		}
 
 		public void Init()
@@ -128,7 +120,7 @@ namespace Sedentary.Framework
 		private void UpdateTooltip()
 		{
 			string state = _stats.IsSitting ? "Sitting" : "Standing";
-			_icon.Text = state + " for " + _stats.SessionTime.ToString(@"h\h\ m\m");
+			_icon.Text = state + " for " + _stats.CurrentPeriodLength.ToString(@"h\h\ m\m");
 		}
 	}
 }

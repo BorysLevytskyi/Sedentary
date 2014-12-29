@@ -69,10 +69,14 @@
     <Compile Include="Framework\IconConfig.cs" />
     <Compile Include="Framework\IconProvider.cs" />
     <Compile Include="Framework\Diagnostics\TraceEventWriter.cs" />
+    <Compile Include="Framework\TimeSpanExtensions.cs" />
+    <Compile Include="Model\Analyzer.cs" />
+    <Compile Include="Model\Requirements.cs" />
     <Compile Include="Model\Statistics.cs" />
     <Compile Include="Model\IdleWatcher.cs" />
     <Compile Include="Framework\Tracer.cs" />
     <Compile Include="Model\Persistence\StatsRepo.cs" />
+    <Compile Include="Model\WorkState.cs" />
     <Compile Include="Model\WorkTracker.cs" />
     <Compile Include="Framework\TrayIcon.cs" />
     <Page Include="Views\MainWindow.xaml">

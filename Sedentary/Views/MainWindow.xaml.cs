@@ -18,7 +18,7 @@ namespace Sedentary.Views
 			Tracer.WriteMethod();
 
 			InitializeComponent();
-			DataContext = new MainWindowModel(App.Tracker.Statistics);
+			DataContext = new MainWindowModel(App.Tracker.Statistics, App.Tracker.Analyzer);
 
 			StartTimer();
 		}

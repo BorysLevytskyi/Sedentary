@@ -8,6 +8,10 @@ namespace Sedentary.Model
 {
 	public class Statistics
 	{
+		private readonly ObservableCollection<WorkPeriod> _periods;
+		private WorkPeriod _currentPeriod;
+		private WorkPeriod _prevPeriod;
+
 		public Statistics(IList<WorkPeriod> periods)
 		{
 			_periods = new ObservableCollection<WorkPeriod>(periods);
@@ -37,9 +41,19 @@ namespace Sedentary.Model
 			get { return _currentPeriod.State == WorkState.Sitting; }
 		}
 
+		public WorkState CurrentState
+		{
+			get { return _currentPeriod.State; }
+		}
+
 		public WorkPeriod CurrentPeriod
 		{
 			get { return _currentPeriod; }
+		}
+
+		public WorkPeriod PreviousPeriod
+		{
+			get { return _prevPeriod; }
 		}
 
 		public TimeSpan TotalSittingTime
@@ -47,35 +61,7 @@ namespace Sedentary.Model
 			get { return _periods.Where(p => p.State == WorkState.Sitting).Select(p => p.Length).Aggregate((x, y) => x + y); }
 		}
 
-		// TODO: Move to notification controller
-		public bool IsSittingLimitExceeded
-		{
-			get { return _currentPeriod.State == WorkState.Sitting && _currentPeriod.Length >= WorkTracker.MaxSittingTime; }
-		}
-
-		public double SittingTimeCompletionRate
-		{
-			get { return IsSitting ? Math.Round((double)_currentPeriod.Length.Ticks / WorkTracker.MaxSittingTime.Ticks, 2) : 0; }
-		}
-
-		// TODO: Implement cooldown minutes per sitting minutes
-		public double CoolDownRate
-		{
-			get
-			{
-				double rate = 0;
-				
-				if (_prevPeriod.State == WorkState.Sitting)
-				{
-					rate = Math.Min(1, (double)_currentPeriod.Length.Ticks / (double)WorkTracker.Cooldown.Ticks);
-				}
-
-				Tracer.WritePropertyValue(rate);
-				return rate;
-			}
-		}
-
-		public TimeSpan SessionTime
+		public TimeSpan CurrentPeriodLength
 		{
 			get { return _currentPeriod.Length; }
 		}
@@ -111,10 +97,6 @@ namespace Sedentary.Model
 			_periods.Add(_currentPeriod = period);
 		}
 
-		private readonly ObservableCollection<WorkPeriod> _periods;
-		private WorkPeriod _currentPeriod;
-		private WorkPeriod _prevPeriod;
-
 		public void RestoreState()
 		{
 			if (_prevPeriod != null)
@@ -122,12 +104,5 @@ namespace Sedentary.Model
 				StartPeriod(_prevPeriod);
 			}
 		}
-	}
-
-	public enum WorkState
-	{
-		Sitting,
-		Standing,
-		Away
 	}
 }
