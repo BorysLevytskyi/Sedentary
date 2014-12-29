@@ -35,7 +35,7 @@ namespace Sedentary.Model
 
 		public TimeSpan EndTime
 		{
-			get { return _endTime; }
+			get { return IsCompleted ? _endTime : DateTime.Now.TimeOfDay; }
 		}
 
 		public TimeSpan Length

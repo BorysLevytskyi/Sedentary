@@ -63,7 +63,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Framework\ClientIdleHandler.cs" />
-    <Compile Include="Framework\Converter\TimeSpanToWidthConverter.cs" />
+    <Compile Include="Framework\Converters\WorkPeriodToLimitConverter.cs" />
     <Compile Include="Framework\Countdown.cs" />
     <Compile Include="Framework\Diagnostics\TraceEvent.cs" />
     <Compile Include="Framework\IconConfig.cs" />
@@ -79,6 +79,10 @@
     <Compile Include="Model\WorkState.cs" />
     <Compile Include="Model\WorkTracker.cs" />
     <Compile Include="Framework\TrayIcon.cs" />
+    <Page Include="Views\Controls\PeriodsChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -87,6 +91,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Views\Controls\PeriodsChart.xaml.cs">
+      <DependentUpon>PeriodsChart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Framework\Converters\TimeSpanToSimeScaleWidthConverter.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

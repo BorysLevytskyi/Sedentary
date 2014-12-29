@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using Sedentary.Model;
 
-namespace Sedentary.Framework.Converter
+namespace Sedentary.Framework.Converters
 {
-	public class TimeSpanToWidthConverter : IValueConverter
+	public class WorkPeriodToLimitConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var ts = (TimeSpan) value;
-			const int totalWidth = 600;
-			double percent = ((double)ts.Ticks / (double)TimeSpan.FromHours(8).Ticks);
-			return (int)(totalWidth*percent);
+			var p = (WorkPeriod) value;
+			return p.State == WorkState.Sitting && (p.Length + TimeSpan.FromMinutes(5)) > App.Tracker.Requirements.MaxSittingTime;
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
