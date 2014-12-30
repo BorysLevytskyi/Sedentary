@@ -66,5 +66,10 @@ namespace Sedentary.ViewModels
 			PropertyChangedEventHandler handler = PropertyChanged;
 			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
 		}
+
+		public void ClearStatistics()
+		{
+			_stats.Clear();
+		}
 	}
 }

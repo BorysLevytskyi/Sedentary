@@ -97,22 +97,16 @@ namespace Sedentary.Model
 			_prevPeriod = _currentPeriod;
 			_periods.Add(_currentPeriod = newPeriod);
 
-			Tracer.Write("----");
-			Tracer.Write("Current time: {0}", DateTime.Now.TimeOfDay);
-			Tracer.Write("Start time: {0}", startTime);
-			Tracer.Write("Work State changed to: {0}", state);
-			Tracer.Write("New period: {0}", newPeriod);
-			Tracer.Write("Session Time being: {0}", this.CurrentPeriodLength);
-
 			OnChanged();
 		}
 
-		public void RestoreState()
+		public void Clear()
 		{
-			if (_prevPeriod != null)
-			{
-				SetState(_prevPeriod.State, DateTime.Now.TimeOfDay);
-			}
+			_periods.Clear();
+			_prevPeriod = null;
+			SetState(WorkState.Sitting);
 		}
+
+
 	}
 }

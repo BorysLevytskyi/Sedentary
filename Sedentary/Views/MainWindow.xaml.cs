@@ -23,17 +23,17 @@ namespace Sedentary.Views
 			StartTimer();
 		}
 
+		public MainWindowModel Model
+		{
+			get { return (MainWindowModel) DataContext; }
+		}
+
 		private void StartTimer()
 		{
 			_timer = new DispatcherTimer();
 			_timer.Tick += (s, e) => Model.Refresh();
 			_timer.Interval = TimeSpan.FromSeconds(1);
 			_timer.IsEnabled = true;
-		}
-
-		public MainWindowModel Model
-		{
-			get { return (MainWindowModel) DataContext; }
 		}
 
 		protected override void OnStateChanged(EventArgs e)
@@ -44,6 +44,11 @@ namespace Sedentary.Views
 			{
 				Hide();
 			}
+		}
+
+		private void ClearStatistics(object sender, RoutedEventArgs e)
+		{
+			Model.ClearStatistics();
 		}
 	}
 }
