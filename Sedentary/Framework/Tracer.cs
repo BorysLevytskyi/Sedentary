@@ -80,7 +80,7 @@ namespace Sedentary.Framework
 		{
 			Write(msg);
 			Trace.Indent();
-			Trace.Write(ex.ToString());
+			Trace.TraceError(ex.ToString());
 			Trace.Unindent();
 		}
 	}

@@ -5,22 +5,18 @@ namespace Sedentary.Model
 {
 	public class IdleWatcher
 	{
-		private readonly ClientIdleHandler _handler;
+		private readonly UserActivityListener _handler;
 		private TimeSpan _lastInput;
 
 		public IdleWatcher()
 		{
-			_handler = new ClientIdleHandler();
+			_handler = new UserActivityListener();
 		}
 
 		public TimeSpan IdleTime
 		{
 			get { return DateTime.Now.TimeOfDay - _lastInput; }
 		}
-
-		public event Action<TimeSpan> IdleEnd;
-
-		public event Action IdleStart;
 
 		public event Action<TimeSpan> UserActive;
 

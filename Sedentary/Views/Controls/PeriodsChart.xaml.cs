@@ -50,7 +50,7 @@ namespace Sedentary.Views.Controls
 
 		    int chunksCount = (int)Math.Ceiling((double) periodsTotalInSeconds/(double) chunkSizeInSeconds);
 
-			TimeScale = TimeSpan.FromSeconds(chunksCount * chunkSizeInSeconds);
+			TimeScale = TimeSpan.FromSeconds(Math.Max(chunkSizeInSeconds, chunksCount * chunkSizeInSeconds));
 		}
 	}
 }

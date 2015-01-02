@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace Sedentary.Framework
 {
 	// Taken from: http://weblogs.asp.net/jdanforth/detecting-idle-time-with-global-mouse-and-keyboard-hooks-in-wpf
-	public class ClientIdleHandler : IDisposable
+	public class UserActivityListener : IDisposable
 	{
 		public event Action UserActive;
 
@@ -15,7 +15,7 @@ namespace Sedentary.Framework
 			if (handler != null) handler();
 		}
 
-		~ClientIdleHandler()
+		~UserActivityListener()
 		{
 			Dispose();
 		}

@@ -5,126 +5,120 @@ using Sedentary.Model.Persistence;
 
 namespace Sedentary.Model
 {
-	public class WorkTracker : IDisposable
-	{
-		public readonly Requirements Requirements = new Requirements
-		{
-//			AwayThreshold = TimeSpan.FromSeconds(60),
-//			MaxSittingTime = TimeSpan.FromSeconds(600),
-//			RequiredRestingTime = TimeSpan.FromSeconds(30)
+    public class WorkTracker : IDisposable
+    {
+        private Analyzer _analyzer;
+        private IdleWatcher _idleWatcher;
+        private Statistics _stats;
+        private DispatcherTimer _timer;
 
-			AwayThreshold = TimeSpan.FromSeconds(60),
-			MaxSittingTime = TimeSpan.FromHours(1),
-			RequiredRestingTime = TimeSpan.FromMinutes(5)
-		};
+        private TrayIcon _tray;
+        private bool _wasExceeded;
+        public Requirements Requirements { get; private set; }
 
-		private IdleWatcher _idleWatcher;
-		private Statistics _stats;
-		private DispatcherTimer _timer;
-		private Analyzer _analyzer;
+        public DispatcherTimer Timer
+        {
+            get { return _timer; }
+        }
 
-		private TrayIcon _tray;
-		private bool _wasExceeded;
+        public Statistics Statistics
+        {
+            get { return _stats; }
+        }
 
-		public DispatcherTimer Timer
-		{
-			get { return _timer; }
-		}
+        public Analyzer Analyzer
+        {
+            get { return _analyzer; }
+        }
 
-		public Statistics Statistics
-		{
-			get { return _stats; }
-		}
+        public void Dispose()
+        {
+            _idleWatcher.Dispose();
+            _tray.Dispose();
+        }
 
-		public Analyzer Analyzer
-		{
-			get { return _analyzer; }
-		}
+        public void Start()
+        {
+            Tracer.Write("Started");
+            
+            Requirements = Requirements.Create();
 
-		public void Dispose()
-		{
-			_idleWatcher.Dispose();
-			_tray.Dispose();
-		}
+            Tracer.WriteObject(Requirements);
 
-		public void Start()
-		{
-			Tracer.Write("Started");
+            _stats = StatsRepo.Get();
+            _analyzer = new Analyzer(_stats, Requirements);
+            _tray = new TrayIcon(_stats, _analyzer);
+            _idleWatcher = new IdleWatcher();
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
 
-			_stats = StatsRepo.Get();
-			_analyzer = new Analyzer(_stats, Requirements);
-			_tray = new TrayIcon(_stats, _analyzer);
-			_idleWatcher = new IdleWatcher();
-			_timer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
+            _tray.Init();
 
-			_tray.Init();
+            _idleWatcher.StartDetection();
+            _idleWatcher.UserActive += OnUserInput;
 
-			_idleWatcher.StartDetection();
-			_idleWatcher.UserActive += OnUserInput;
+            _tray.OnPositionSwitch += OnPositionSwitch;
 
-			_tray.OnPositionSwitch += OnPositionSwitch;
+            _timer.Start();
+            _timer.Tick += OnTimerOnTick;
+        }
 
-			_timer.Start();
-			_timer.Tick += OnTimerOnTick;
-		}
+        private void OnUserInput(TimeSpan idleTime)
+        {
+            if (_stats.CurrentState == WorkState.Away)
+            {
+                Tracer.Write("User returned. Idle time was: {0}", idleTime);
+                RestoreLastState();
+            }
+        }
 
-		private void OnUserInput(TimeSpan idleTime)
-		{
-			if (_stats.CurrentState == WorkState.Away)
-			{
-				Tracer.Write("User returned. Idle time was: {0}", idleTime);
-				RestoreLastState();
-			}
-		}
+        private void RestoreLastState()
+        {
+            SetState(_stats.PreviousPeriod.State);
+        }
 
-		private void RestoreLastState()
-		{
-			SetState(_stats.PreviousPeriod.State);
-		}
+        private void OnPositionSwitch()
+        {
+            SetState(_stats.IsSitting ? WorkState.Standing : WorkState.Sitting);
+        }
 
-		private void OnPositionSwitch()
-		{
-			SetState(_stats.IsSitting ? WorkState.Standing : WorkState.Sitting);
-		}
+        private void SetState(WorkState workState)
+        {
+            TimeSpan startTime = DateTime.Now.TimeOfDay;
 
-		private void SetState(WorkState workState)
-		{
-			TimeSpan startTime = DateTime.Now.TimeOfDay;
+            if (workState == WorkState.Away)
+            {
+                startTime = DateTime.Now.TimeOfDay.Subtract(Requirements.AwayThreshold);
+            }
 
-			if (workState == WorkState.Away)
-			{
-				startTime = DateTime.Now.TimeOfDay.Subtract(Requirements.AwayThreshold);
-			}
+            _stats.SetState(workState, startTime);
 
-			_stats.SetState(workState, startTime);
+            _tray.Refresh();
+        }
 
-			_tray.Refresh();
-		}
+        private void OnTimerOnTick(object s, EventArgs o)
+        {
+            if (_stats.IsSitting)
+            {
+                if (!_wasExceeded && _analyzer.IsSittingLimitExceeded)
+                {
+                    OnSittingLimitExceeded();
+                    _wasExceeded = true;
+                }
+            }
 
-		private void OnTimerOnTick(object s, EventArgs o)
-		{
-			if (_stats.IsSitting)
-			{
-				if (!_wasExceeded && _analyzer.IsSittingLimitExceeded)
-				{
-					OnSittingLimitExceeded();
-					_wasExceeded = true;
-				}
-			}
+            if (!_stats.IsAway && _idleWatcher.IdleTime >= Requirements.AwayThreshold)
+            {
+                Tracer.Write("Detected idle time");
+                SetState(WorkState.Away);
+            }
 
-			if (!_stats.IsAway && _idleWatcher.IdleTime >= Requirements.AwayThreshold)
-			{
-				Tracer.Write("Detected idle time");
-				SetState(WorkState.Away);
-			}
+            _tray.Refresh();
+        }
 
-			_tray.Refresh();
-		}
-
-		private void OnSittingLimitExceeded()
-		{
-			Tracer.Write("Sitting limit exceeded");
-			_tray.ShowWarning();
-		}
-	}
+        private void OnSittingLimitExceeded()
+        {
+            Tracer.Write("Sitting limit exceeded");
+            _tray.ShowWarning();
+        }
+    }
 }

@@ -58,8 +58,6 @@ namespace Sedentary.Framework
 			Bitmap bitmap = IconProvider.GetIconImage(_cfg);
 
 			_icon.Icon = System.Drawing.Icon.FromHandle(bitmap.GetHicon());
-
-			Tracer.Write("Icon updated");
 		}
 
 		public void ShowWarning()
@@ -137,7 +135,7 @@ namespace Sedentary.Framework
 
 		private void UpdateTooltip()
 		{
-			string state = _stats.IsSitting ? "Sitting" : "Standing";
+			string state = _stats.CurrentPeriod.State.ToString();
 			_icon.Text = state + " for " + _stats.CurrentPeriodLength.ToString(@"h\h\ m\m");
 		}
 	}

@@ -39,7 +39,7 @@
 	        <RowDefinition Height="*" />
 	        <RowDefinition Height="Auto" />
 	    </Grid.RowDefinitions>
-	    <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+	    <Border BorderBrush="Black" BorderThickness="0,0,0,1" Name="Brd">
 			<ItemsControl ItemsSource="{Binding WorkPeriods}" Name="Chart" Background="White" HorizontalAlignment="Stretch">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="model:WorkPeriod">
@@ -47,7 +47,7 @@
 							<Border.Width>
 								<MultiBinding Converter="{StaticResource Converter}">
 									<Binding Path="Length" />
-									<Binding Path="TimeScale" Source="{RelativeSource FindAncestor, AncestorType=controls:PeriodsChart}" />
+									<Binding Path="DataContext.TimeScale" ElementName="Brd" />
 									<Binding Path="ActualWidth" ElementName="Chart" />
 								</MultiBinding>
 							</Border.Width>
