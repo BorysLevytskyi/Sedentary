@@ -11,7 +11,7 @@ namespace Sedentary.Framework.Converters
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
 			var timeSpan = (TimeSpan) values[0];
-			var timeScale = TimeSpan.FromHours(8); // (TimeSpan) values[1]; TODO: Fix this bug
+		    var timeScale = (values[1] is TimeSpan) ? (TimeSpan) values[1] : TimeSpan.FromHours(8);
 			var actualWidth = (double) values[2];
 
 			var rate = timeSpan.GetCompletionRateFor(timeScale);

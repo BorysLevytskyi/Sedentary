@@ -26,17 +26,9 @@ namespace Sedentary.Views.Controls
 		{
 			InitializeComponent();
 
-			this.DataContext = this;
+			DataContext = this;
 
 			TimeScale = TimeSpan.FromHours(8);
-		}
-
-		private IEnumerable<WorkPeriod> CreateDesignPeriods()
-		{
-			yield return new WorkPeriod(WorkState.Sitting, TimeSpan.Zero, TimeSpan.FromHours(1));
-			yield return new WorkPeriod(WorkState.Standing, TimeSpan.FromHours(1), TimeSpan.FromHours(2));
-			yield return new WorkPeriod(WorkState.Away, TimeSpan.FromHours(2), TimeSpan.FromHours(4));
-			yield return new WorkPeriod(WorkState.Sitting, TimeSpan.FromHours(4), TimeSpan.FromHours(6));
 		}
 
 		public TimeSpan TimeScale
@@ -53,7 +45,12 @@ namespace Sedentary.Views.Controls
 
 		private void OnPeriodsChanged(DependencyPropertyChangedEventArgs args)
 		{
-			Tracer.Write("Periods changed");
+			const int chunkSizeInSeconds = 30*60; // 30 min
+			int periodsTotalInSeconds = WorkPeriods.Sum(p => p.Length.Seconds);
+
+		    int chunksCount = (int)Math.Ceiling((double) periodsTotalInSeconds/(double) chunkSizeInSeconds);
+
+			TimeScale = TimeSpan.FromSeconds(chunksCount * chunkSizeInSeconds);
 		}
 	}
 }

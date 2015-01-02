@@ -1,12 +1,13 @@
 ﻿<UserControl x:Class="Sedentary.Views.Controls.PeriodsChart"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:model="clr-namespace:Sedentary.Model"
-             xmlns:converters="clr-namespace:Sedentary.Framework.Converters"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" SnapsToDevicePixels="True">
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:model="clr-namespace:Sedentary.Model"
+			 xmlns:converters="clr-namespace:Sedentary.Framework.Converters"
+			 xmlns:controls="clr-namespace:Sedentary.Views.Controls"
+			 mc:Ignorable="d" 
+			 d:DesignHeight="300" d:DesignWidth="300" SnapsToDevicePixels="True">
 	<UserControl.Resources>
 		<converters:TimeSpanToSimeScaleWidthConverter x:Key="Converter" />
 		<converters:WorkPeriodToLimitConverter x:Key="IsLimitConverter" />
@@ -33,8 +34,12 @@
 			</Style.Triggers>
 		</Style>
 	</UserControl.Resources>
-    <Grid>
-		<Border BorderBrush="Black" BorderThickness="0,0,0,1">
+	<Grid>
+	    <Grid.RowDefinitions>
+	        <RowDefinition Height="*" />
+	        <RowDefinition Height="Auto" />
+	    </Grid.RowDefinitions>
+	    <Border BorderBrush="Black" BorderThickness="0,0,0,1">
 			<ItemsControl ItemsSource="{Binding WorkPeriods}" Name="Chart" Background="White" HorizontalAlignment="Stretch">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="model:WorkPeriod">
@@ -42,7 +47,7 @@
 							<Border.Width>
 								<MultiBinding Converter="{StaticResource Converter}">
 									<Binding Path="Length" />
-									<Binding />
+									<Binding Path="TimeScale" Source="{RelativeSource FindAncestor, AncestorType=controls:PeriodsChart}" />
 									<Binding Path="ActualWidth" ElementName="Chart" />
 								</MultiBinding>
 							</Border.Width>
@@ -60,5 +65,7 @@
 				</ItemsControl.ItemsPanel>
 			</ItemsControl>
 		</Border>
+		<TextBlock Text="{Binding Path=TimeScale, StringFormat={}Time scale: {0}}" Grid.Row="1">
+		</TextBlock>
 	</Grid>
 </UserControl>
