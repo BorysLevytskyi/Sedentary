@@ -64,6 +64,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Framework\UserActivityListener.cs" />
+    <Compile Include="Framework\ClientIdleHandler.cs" />
+    <Compile Include="Framework\Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Framework\Converters\WorkPeriodToLimitConverter.cs" />
     <Compile Include="Framework\Countdown.cs" />
     <Compile Include="Framework\Diagnostics\TraceEvent.cs" />

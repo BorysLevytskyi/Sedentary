@@ -40,9 +40,9 @@
 					<DataTemplate DataType="model:WorkPeriod">
 						<TextBlock>
 							<TextBlock.Text>
-								<MultiBinding StringFormat="{}{0} for {1:h\h\ m\m}">
+								<MultiBinding StringFormat="{}{0} for {1}">
 									<Binding Path="State" />
-									<Binding Path="Length" />
+									<Binding Path="Length" Converter="{StaticResource TimeSpanToStringConverter}" />
 								</MultiBinding>
 							</TextBlock.Text>
 						</TextBlock>
