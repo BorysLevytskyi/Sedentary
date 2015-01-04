@@ -46,7 +46,7 @@ namespace Sedentary.Views.Controls
 		private void OnPeriodsChanged(DependencyPropertyChangedEventArgs args)
 		{
 			const int chunkSizeInSeconds = 30*60; // 30 min
-			int periodsTotalInSeconds = WorkPeriods.Sum(p => p.Length.Seconds);
+			int periodsTotalInSeconds = (int)WorkPeriods.Sum(p => p.Length.TotalSeconds);
 
 		    int chunksCount = (int)Math.Ceiling((double) periodsTotalInSeconds/(double) chunkSizeInSeconds);
 

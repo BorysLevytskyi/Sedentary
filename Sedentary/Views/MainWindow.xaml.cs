@@ -50,5 +50,10 @@ namespace Sedentary.Views
 		{
 			Model.ClearStatistics();
 		}
+
+		private void RefreshView(object sender, RoutedEventArgs e)
+		{
+			Model.Refresh();
+		}
 	}
 }

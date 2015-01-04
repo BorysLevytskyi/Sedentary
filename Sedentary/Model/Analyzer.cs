@@ -37,6 +37,7 @@ namespace Sedentary.Model
 			}
 
 			var sittingPeriod = _stats.PreviousPeriod;
+
 			var timeResting = DateTime.Now.TimeOfDay - sittingPeriod.EndTime;
 
 			double accumulatedSittingPressureRate = 
@@ -54,6 +55,27 @@ namespace Sedentary.Model
 
 
 			return Math.Max(0, pressureRate);
+		}
+
+		public double GetPressureRatio()
+		{
+			double pressureRate = 0;
+			foreach (var period in _stats.Periods)
+			{
+				if (period.State == WorkState.Sitting)
+				{
+					pressureRate = (pressureRate + period.Length.GetCompletionRateFor(_requirements.MaxSittingTime)).InRangeOf(0,1);
+				}
+				else // Resting period
+				{
+					double restingRate = period.Length.GetCompletionRateFor(_requirements.RequiredRestingTime);
+					double subTraction = pressureRate = 1 - restingRate;
+					subTraction = subTraction*pressureRate;
+					pressureRate = (pressureRate - subTraction).InRangeOf(0, 1);
+				}
+			}
+
+			return Math.Round(pressureRate, 2);
 		}
 	}
 }

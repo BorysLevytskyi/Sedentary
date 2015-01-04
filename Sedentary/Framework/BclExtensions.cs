@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Sedentary.Framework
 {
-	public static class TimeSpanExtensions
+	public static class BclExtensions
 	{
 		public static double GetCompletionRateFor(this TimeSpan timePassed, TimeSpan requiredTime)
 		{
@@ -34,7 +34,17 @@ namespace Sedentary.Framework
 				sb.Append(time.Seconds + "s ");
 			}
 
+			if (sb.Length == 0)
+			{
+				return "0s";
+			}
+
 			return sb.ToString(0, sb.Length - 1); // W/o last space
+		}
+
+		public static double InRangeOf(this double value, double min, double max)
+		{
+			return Math.Max(Math.Min(value, min), max);
 		}
 	}
 }

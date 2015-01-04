@@ -22,7 +22,7 @@ namespace Sedentary.ViewModels
 			_stats = stats;
 			_analyzer = analyzer;
 			_stats.Changed += Refresh;
-			_stats.Periods.CollectionChanged += (s, o) => OnPropertyChanged("Periods");
+			_stats.Periods.CollectionChanged += (s, o) => Refresh();
 		}
 
 		public bool IsSitting
@@ -50,6 +50,11 @@ namespace Sedentary.ViewModels
 			get { return _analyzer.IsSittingLimitExceeded; }
 		}
 
+		public double PressureRatio
+		{
+			get { return _analyzer.GetPressureRatio(); }
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public void Refresh()
@@ -58,6 +63,8 @@ namespace Sedentary.ViewModels
 			OnPropertyChanged("CurrentPeriod");
 			OnPropertyChanged("IsSittingLimitExceeded");
 			OnPropertyChanged("Status");
+			OnPropertyChanged("Periods");
+			OnPropertyChanged("PressureRatio");
 		}
 
 		[NotifyPropertyChangedInvocator]

@@ -7,12 +7,12 @@ namespace Sedentary.Framework
 	// Taken from: http://weblogs.asp.net/jdanforth/detecting-idle-time-with-global-mouse-and-keyboard-hooks-in-wpf
 	public class UserActivityListener : IDisposable
 	{
-		public event Action UserActive;
+		public event EventHandler UserActive;
 
 		protected virtual void OnUserActive()
 		{
-			Action handler = UserActive;
-			if (handler != null) handler();
+			EventHandler handler = UserActive;
+			if (handler != null) handler(this, EventArgs.Empty);
 		}
 
 		~UserActivityListener()

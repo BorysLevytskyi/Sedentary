@@ -7,18 +7,7 @@ namespace Sedentary.Model
 {
 	public class WorkTracker : IDisposable
 	{
-		public readonly Requirements Requirements = new Requirements
-		{
-//			AwayThreshold = TimeSpan.FromSeconds(60),
-//			MaxSittingTime = TimeSpan.FromSeconds(600),
-//			RequiredRestingTime = TimeSpan.FromSeconds(30)
-
-			AwayThreshold = TimeSpan.FromSeconds(60),
-//			AwayThreshold = TimeSpan.FromSeconds(10),
-			MaxSittingTime = TimeSpan.FromHours(1),
-			RequiredRestingTime = TimeSpan.FromMinutes(5)
-		};
-
+		private Requirements _requirements;
 		private IdleWatcher _idleWatcher;
 		private Statistics _stats;
 		private DispatcherTimer _timer;
@@ -30,6 +19,11 @@ namespace Sedentary.Model
 		public DispatcherTimer Timer
 		{
 			get { return _timer; }
+		}
+
+		public Requirements Requirements
+		{
+			get { return _requirements; }
 		}
 
 		public Statistics Statistics
@@ -52,21 +46,29 @@ namespace Sedentary.Model
 		{
 			Tracer.Write("Started");
 
+			_requirements = Requirements.Create();
+
 			_stats = StatsRepo.Get();
 			_analyzer = new Analyzer(_stats, Requirements);
 			_tray = new TrayIcon(_stats, _analyzer);
-			_idleWatcher = new IdleWatcher();
+			_idleWatcher = new IdleWatcher(Requirements.AwayThreshold);
 			_timer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
 
 			_tray.Init();
 
-			_idleWatcher.StartDetection();
-			_idleWatcher.UserActive += OnUserInput;
+			_idleWatcher.Start();
+			_idleWatcher.UserInput += OnUserInput;
+			_idleWatcher.IdleStarted += OnIdleStarted;
 
 			_tray.OnPositionSwitch += OnPositionSwitch;
 
 			_timer.Start();
 			_timer.Tick += OnTimerOnTick;
+		}
+
+		void OnIdleStarted()
+		{
+			SetState(WorkState.Away);
 		}
 
 		private void OnUserInput(TimeSpan idleTime)
@@ -90,6 +92,11 @@ namespace Sedentary.Model
 
 		private void SetState(WorkState workState)
 		{
+			if (workState == _stats.CurrentState)
+			{
+				return;
+			}
+
 			TimeSpan startTime = DateTime.Now.TimeOfDay;
 
 			if (workState == WorkState.Away)
@@ -111,12 +118,6 @@ namespace Sedentary.Model
 					OnSittingLimitExceeded();
 					_wasExceeded = true;
 				}
-			}
-
-			if (!_stats.IsAway && _idleWatcher.IdleTime >= Requirements.AwayThreshold)
-			{
-				Tracer.Write("Detected idle time");
-				SetState(WorkState.Away);
 			}
 
 			_tray.Refresh();
