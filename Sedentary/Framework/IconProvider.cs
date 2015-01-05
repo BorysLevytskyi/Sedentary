@@ -17,7 +17,7 @@ namespace Sedentary.Framework
 			Bitmap icon;
 			if (IconCache.TryGetValue(cfg, out icon))
 			{
-				Tracer.Write("Icon used from cache");
+				// Tracer.Write("Icon used from cache");
 				return icon;
 			}
 
@@ -53,7 +53,7 @@ namespace Sedentary.Framework
 						
 						graphics.Flush();
 
-						Tracer.Write("New icon drawn");
+						// Tracer.Write("New icon drawn");
 
 						return icon;
 					}

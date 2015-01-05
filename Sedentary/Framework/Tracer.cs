@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -11,7 +12,6 @@ namespace Sedentary.Framework
 	{
 		public static void Write(string message, params object[] messageArgs)
 		{
-			var stack = new StackTrace();
 			var className = GetCallingMember().DeclaringType.Name;
 			Trace.WriteLine(string.Format(@"{0:hh\:mm\:ss} {1}: {2}", DateTime.Now.TimeOfDay, className, string.Format(message, messageArgs)));
 			Trace.Flush();
@@ -19,7 +19,6 @@ namespace Sedentary.Framework
 
 		public static void WriteMethod(params object[] args)
 		{
-			var stack = new StackTrace();
 			MethodBase method = GetCallingMember();
 			var className = method.DeclaringType.Name;
 			
