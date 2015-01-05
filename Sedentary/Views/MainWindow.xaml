@@ -36,20 +36,22 @@
 			</StackPanel>
 		</TabItem>
 		<TabItem Header="Periods">
-			<ItemsControl ItemsSource="{Binding Periods}">
-				<ItemsControl.ItemTemplate>
-					<DataTemplate DataType="model:WorkPeriod">
-						<TextBlock>
-							<TextBlock.Text>
-								<MultiBinding StringFormat="{}{0} for {1}">
-									<Binding Path="State" />
-									<Binding Path="Length" Converter="{StaticResource TimeSpanToStringConverter}" />
-								</MultiBinding>
-							</TextBlock.Text>
-						</TextBlock>
-					</DataTemplate>
-				</ItemsControl.ItemTemplate>
-			</ItemsControl>
+			<ScrollViewer HorizontalScrollBarVisibility="Visible">
+				<ItemsControl ItemsSource="{Binding Periods}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate DataType="model:WorkPeriod">
+							<TextBlock>
+								<TextBlock.Text>
+									<MultiBinding StringFormat="{}{0} for {1}">
+										<Binding Path="State" />
+										<Binding Path="Length" Converter="{StaticResource TimeSpanToStringConverter}" />
+									</MultiBinding>
+								</TextBlock.Text>
+							</TextBlock>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
 		</TabItem>
 	</TabControl>
 </Window>

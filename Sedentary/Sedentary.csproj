@@ -147,9 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="appicon.ico" />
-    <EmbeddedResource Include="away.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="away.png" />
     <EmbeddedResource Include="sitting.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

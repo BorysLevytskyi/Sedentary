@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -10,9 +9,27 @@ namespace Sedentary.Framework
 {
 	public static class Tracer
 	{
+		private static string _filter;
+
+		public static void Filter<T>()
+		{
+			Filter(typeof(T).Name);
+		}
+
+		public static void Filter(string filter)
+		{
+			_filter = filter;
+		}
+
 		public static void Write(string message, params object[] messageArgs)
 		{
 			var className = GetCallingMember().DeclaringType.Name;
+
+			if (!string.IsNullOrEmpty(_filter) && !_filter.Equals(className, StringComparison.OrdinalIgnoreCase))
+			{
+				return;
+			}
+
 			Trace.WriteLine(string.Format(@"{0:hh\:mm\:ss} {1}: {2}", DateTime.Now.TimeOfDay, className, string.Format(message, messageArgs)));
 			Trace.Flush();
 		}

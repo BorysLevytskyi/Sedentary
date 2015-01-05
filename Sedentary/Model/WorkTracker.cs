@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Threading;
 using Sedentary.Framework;
 using Sedentary.Model.Persistence;
@@ -45,6 +46,8 @@ namespace Sedentary.Model
 		public void Start()
 		{
 			Tracer.Write("Started");
+
+			Tracer.Filter<IdleWatcher>();
 
 			_requirements = Requirements.Create();
 

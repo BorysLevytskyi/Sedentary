@@ -65,6 +65,7 @@ namespace Sedentary.Model
 
 			if (idleTime >= _idleThreshold)
 			{
+				Tracer.Write("Detected idle time. Last input is {0}", _lastInput);
 				OnIdleStarted();
 			}
 		}
@@ -83,16 +84,13 @@ namespace Sedentary.Model
 		private void LogEventsCount()
 		{
 			var now = DateTime.Now.TimeOfDay;
-			TimeSpan window = TimeSpan.FromSeconds(30);
+			TimeSpan window = TimeSpan.FromSeconds(60);
 			var currentWindow = now.Subtract(TimeSpan.FromTicks(now.Ticks%window.Ticks));
 
-			lock (_sync) // TODO: Maybe there is no need to lock
+			if (currentWindow > traceTimeWindow)
 			{
-				if (currentWindow > traceTimeWindow)
-				{
-					Tracer.Write("{0} events logged between {1} and {2}", eventsCount, traceTimeWindow, now);
-					traceTimeWindow = currentWindow;
-				}
+				Tracer.Write("{0} events logged between {1} and {2}. Last input is {3}", eventsCount, traceTimeWindow, now, _lastInput);
+				traceTimeWindow = currentWindow;
 			}
 		}
 
