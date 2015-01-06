@@ -65,7 +65,7 @@
 				</ItemsControl.ItemsPanel>
 			</ItemsControl>
 		</Border>
-		<TextBlock Text="{Binding Path=TimeScale, StringFormat={}Time scale: {0}}" Grid.Row="1">
+		<TextBlock Text="{Binding Path=TimeScale, StringFormat={}Time scale: {0}, Converter={StaticResource TimeSpanToStringConverter}}" Grid.Row="1">
 		</TextBlock>
 	</Grid>
 </UserControl>

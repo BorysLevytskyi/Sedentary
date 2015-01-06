@@ -42,7 +42,7 @@ namespace Sedentary.Framework
 			return sb.ToString(0, sb.Length - 1); // W/o last space
 		}
 
-		public static TimeSpan RoundToSeconds(this TimeSpan timeSpan)
+		public static TimeSpan TrimMilliseconds(this TimeSpan timeSpan)
 		{
 		    return timeSpan.RoundTo(TimeSpan.FromSeconds(1));
 		}

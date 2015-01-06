@@ -51,7 +51,6 @@ namespace Sedentary.Model
 
 		public void Dispose()
 		{
-			_idleWatcher.Dispose();
 			_tray.Dispose();
 		}
 

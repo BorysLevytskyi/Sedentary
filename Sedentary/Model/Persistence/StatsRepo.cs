@@ -77,7 +77,7 @@ namespace Sedentary.Model.Persistence
 			{
 				State = period.State;
 				StartTime = period.StartTime.ToString(TimeSpanPersistFormat);
-				EndTime = period.EndTime.ToString(TimeSpanPersistFormat);
+				EndTime = (period.IsCompleted ? period.EndTime : TimeSpan.Zero).ToString(TimeSpanPersistFormat);
 			}
 
 			[XmlAttribute]
