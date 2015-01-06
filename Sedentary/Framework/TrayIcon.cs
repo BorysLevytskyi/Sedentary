@@ -15,10 +15,16 @@ namespace Sedentary.Framework
 
 		private NotifyIcon _icon;
 
-		public TrayIcon(Statistics stats, Analyzer analyzer)
+		public TrayIcon(Statistics stats, Analyzer analyzer, WorkTracker workTracker)
 		{
 			_stats = stats;
 			_analyzer = analyzer;
+
+			workTracker.OnUserAway += () => _icon.ShowBalloonTip(5000, "User Away", "You've went away", ToolTipIcon.Info);
+		    workTracker.NoEventsOnTimeWindow +=
+		        (window) =>
+		            _icon.ShowBalloonTip(1000, "No Events",
+		                string.Format("No events were registered for time window {0}", window), ToolTipIcon.Info);
 		}
 
 		public event Action OnPositionSwitch;

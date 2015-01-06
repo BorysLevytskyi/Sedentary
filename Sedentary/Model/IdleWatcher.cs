@@ -16,9 +16,7 @@ namespace Sedentary.Model
 		private DispatcherTimer _timer;
 		private bool _idleStarted;
 
-		private TimeSpan traceTimeWindow = TimeSpan.Zero;
-		private int eventsCount = 0;
-
+		
 		public IdleWatcher(TimeSpan idleThreshold)
 		{
 			_idleThreshold = idleThreshold;
@@ -30,9 +28,11 @@ namespace Sedentary.Model
 			get { return DateTime.Now.TimeOfDay - _lastInput; }
 		}
 
-		public event Action<TimeSpan> UserInput;
+		public event Action<TimeSpan> UserActive;
 
 		public event Action IdleStarted;
+
+		public event Action<TimeSpan> NoEventsOnTimeWindow;
 
 		protected virtual void OnIdleStarted()
 		{
@@ -59,39 +59,26 @@ namespace Sedentary.Model
 				return;
 			}
 
-			LogEventsCount();
+			EventCountLogger.LogEvents(this);
 
 			var idleTime = DateTime.Now.TimeOfDay - _lastInput;
 
 			if (idleTime >= _idleThreshold)
 			{
-				Tracer.Write("Detected idle time. Last input is {0}", _lastInput);
+				Tracer.Write("Detected idle time. Last input is {0}", _lastInput.RoundToSeconds());
 				OnIdleStarted();
 			}
 		}
 
 		private void OnUserInput(object sender, EventArgs e)
 		{
+			EventCountLogger.Increment();
+
 			TimeSpan period = IdleTime;
 			_lastInput = DateTime.Now.TimeOfDay;
 			_idleStarted = false;
 
-			eventsCount++;
-
 			OnUserActive(period);
-		}
-
-		private void LogEventsCount()
-		{
-			var now = DateTime.Now.TimeOfDay;
-			TimeSpan window = TimeSpan.FromSeconds(60);
-			var currentWindow = now.Subtract(TimeSpan.FromTicks(now.Ticks%window.Ticks));
-
-			if (currentWindow > traceTimeWindow)
-			{
-				Tracer.Write("{0} events logged between {1} and {2}. Last input is {3}", eventsCount, traceTimeWindow, now, _lastInput);
-				traceTimeWindow = currentWindow;
-			}
 		}
 
 		public void Dispose()
@@ -101,10 +88,45 @@ namespace Sedentary.Model
 
 		protected virtual void OnUserActive(TimeSpan period)
 		{
-			Action<TimeSpan> handler = UserInput;
+			Action<TimeSpan> handler = UserActive;
 			if (handler != null) handler(period);
 		}
 
-		private readonly object _sync = new object();
+		private static class EventCountLogger
+		{
+			private static TimeSpan _currentEventsLoggingWindow = TimeSpan.Zero;
+			private static readonly TimeSpan EventsCountLoggerWindowSize = TimeSpan.FromSeconds(60);
+			private static int _eventsCountPerTimeWindow = 0;
+
+
+			public static void Increment()
+			{
+				Interlocked.Increment(ref _eventsCountPerTimeWindow);
+			}
+
+			public static void LogEvents(IdleWatcher watcher)
+			{
+				var now = DateTime.Now.TimeOfDay;
+				var currentTimeWindow = now.RoundTo(EventsCountLoggerWindowSize);
+
+				if (currentTimeWindow > _currentEventsLoggingWindow)
+				{
+					Tracer.Write<IdleWatcher>("{0} events logged between {1} and {2}. Last input is {3}",
+						_eventsCountPerTimeWindow,
+						_currentEventsLoggingWindow,
+						now.RoundToSeconds(),
+						watcher._lastInput.RoundToSeconds());
+
+					int count = Interlocked.Exchange(ref _eventsCountPerTimeWindow, 0);
+
+					if (count == 0 && watcher.NoEventsOnTimeWindow != null)
+					{
+						watcher.NoEventsOnTimeWindow(currentTimeWindow);
+					}
+
+					_currentEventsLoggingWindow = currentTimeWindow;
+				}
+			}
+		}
 	}
 }

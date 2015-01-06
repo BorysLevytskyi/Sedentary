@@ -42,6 +42,16 @@ namespace Sedentary.Framework
 			return sb.ToString(0, sb.Length - 1); // W/o last space
 		}
 
+		public static TimeSpan RoundToSeconds(this TimeSpan timeSpan)
+		{
+		    return timeSpan.RoundTo(TimeSpan.FromSeconds(1));
+		}
+
+		public static TimeSpan RoundTo(this TimeSpan timeSpan, TimeSpan windowSize)
+		{
+			return timeSpan.Subtract(TimeSpan.FromTicks(timeSpan.Ticks % windowSize.Ticks));
+		}
+
 		public static double InRangeOf(this double value, double min, double max)
 		{
 			return Math.Max(Math.Min(value, min), max);

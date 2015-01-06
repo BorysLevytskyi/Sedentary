@@ -37,6 +37,18 @@ namespace Sedentary.Model
 			get { return _analyzer; }
 		}
 
+		public event Action OnUserAway
+		{
+			add { _idleWatcher.IdleStarted += value; }
+			remove { _idleWatcher.IdleStarted -= value; }
+		}
+
+		public event Action<TimeSpan> NoEventsOnTimeWindow
+		{
+			add { _idleWatcher.NoEventsOnTimeWindow += value; }
+			remove { _idleWatcher.NoEventsOnTimeWindow -= value; }
+		}
+
 		public void Dispose()
 		{
 			_idleWatcher.Dispose();
@@ -53,14 +65,14 @@ namespace Sedentary.Model
 
 			_stats = StatsRepo.Get();
 			_analyzer = new Analyzer(_stats, Requirements);
-			_tray = new TrayIcon(_stats, _analyzer);
 			_idleWatcher = new IdleWatcher(Requirements.AwayThreshold);
+			_tray = new TrayIcon(_stats, _analyzer, this);
 			_timer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
 
 			_tray.Init();
 
 			_idleWatcher.Start();
-			_idleWatcher.UserInput += OnUserInput;
+			_idleWatcher.UserActive += OnUserActive;
 			_idleWatcher.IdleStarted += OnIdleStarted;
 
 			_tray.OnPositionSwitch += OnPositionSwitch;
@@ -74,7 +86,7 @@ namespace Sedentary.Model
 			SetState(WorkState.Away);
 		}
 
-		private void OnUserInput(TimeSpan idleTime)
+		private void OnUserActive(TimeSpan idleTime)
 		{
 			if (_stats.CurrentState == WorkState.Away)
 			{
