@@ -61,7 +61,7 @@ namespace Sedentary.Model
 
 		public TimeSpan TotalSittingTime
 		{
-			get { return _periods.Where(p => p.State == WorkState.Sitting).Select(p => p.Length).Aggregate((x, y) => x + y); }
+			get { return TimeSpan.FromTicks(_periods.Where(p => p.State == WorkState.Sitting).Sum(p => p.Length.Ticks)); }
 		}
 
 		public TimeSpan CurrentPeriodLength

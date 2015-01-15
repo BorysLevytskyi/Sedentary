@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Windows.Threading;
 using Sedentary.Framework;
-using Sedentary.Model.Persistence;
 
 namespace Sedentary.Model
 {
-	public class WorkTracker : IDisposable
+	public class WorkTracker
 	{
-		private readonly Requirements _requirements;
-		private readonly IdleWatcher _idleWatcher;
-		private readonly Statistics _stats;
-		private DispatcherTimer _timer;
 		private readonly Analyzer _analyzer;
+		private readonly IdleWatcher _idleWatcher;
+		private readonly Requirements _requirements;
+		private readonly Statistics _stats;
 
 		private readonly TrayIcon _tray;
+		private DispatcherTimer _timer;
 		private bool _wasExceeded;
 
-		public WorkTracker(Requirements requirements, Statistics stats, Analyzer analyzer, IdleWatcher idleWatcher, TrayIcon tray)
+		public WorkTracker(Requirements requirements, Statistics stats, Analyzer analyzer, IdleWatcher idleWatcher,
+			TrayIcon tray)
 		{
 			_requirements = requirements;
 			_stats = stats;
@@ -57,11 +57,6 @@ namespace Sedentary.Model
 			remove { _idleWatcher.NoEventsOnTimeWindow -= value; }
 		}
 
-		public void Dispose()
-		{
-			_tray.Dispose();
-		}
-
 		public void Start()
 		{
 			Tracer.Write("Started");
@@ -82,7 +77,7 @@ namespace Sedentary.Model
 			_timer.Tick += OnTimerOnTick;
 		}
 
-		void OnIdleStarted()
+		private void OnIdleStarted()
 		{
 			SetState(WorkState.Away);
 		}

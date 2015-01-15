@@ -17,11 +17,19 @@ namespace Sedentary
 {
 	public class AppBootstrapper : BootstrapperBase
 	{
-		private IContainer _container;
+		private ILifetimeScope _scope;
 
 		public AppBootstrapper()
 		{
 			Initialize();
+		}
+
+		protected override void OnExit(object sender, EventArgs e)
+		{
+			base.OnExit(sender, e);
+
+			_scope.Resolve<ApplicationLifetimeService>().OnExit();
+			_scope.Dispose();
 		}
 
 		protected override void OnStartup(object sender, StartupEventArgs e)
@@ -37,38 +45,40 @@ namespace Sedentary
 
 			var builder = new ContainerBuilder();
 			RegisterContainer(builder);
-			_container = builder.Build();
+
+			_scope = builder.Build().BeginLifetimeScope();
 		}
 
 		public static void RegisterContainer(ContainerBuilder builder)
 		{
-			builder.Register(c => Requirements.Create()).AsSelf().SingleInstance();
-			builder.Register(c => StatsRepo.Get()).AsSelf().SingleInstance();
-			builder.RegisterType<Analyzer>().SingleInstance();
-			builder.RegisterType<IdleWatcher>().SingleInstance();
-			builder.RegisterType<TrayIcon>().SingleInstance();
-			builder.RegisterType<WorkTracker>().SingleInstance();
-			builder.RegisterType<WindowManager>().As<IWindowManager>().SingleInstance();
-			builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
-			builder.RegisterType<ShellViewModel>().AsSelf().PropertiesAutowired().SingleInstance();
-			builder.RegisterType<PeriodsChartViewModel>().AsSelf().SingleInstance();
+			builder.RegisterType<ApplicationLifetimeService>().AsSelf();
+			builder.Register(c => Requirements.Create()).AsSelf().InstancePerLifetimeScope();
+			builder.Register(c => StatsRepo.Get()).AsSelf().InstancePerLifetimeScope();
+			builder.RegisterType<Analyzer>().InstancePerLifetimeScope();
+			builder.RegisterType<IdleWatcher>().InstancePerLifetimeScope();
+			builder.RegisterType<TrayIcon>().InstancePerLifetimeScope();
+			builder.RegisterType<WorkTracker>().InstancePerLifetimeScope();
+			builder.RegisterType<WindowManager>().As<IWindowManager>().InstancePerLifetimeScope();
+			builder.RegisterType<EventAggregator>().As<IEventAggregator>().InstancePerLifetimeScope();
+			builder.RegisterType<ShellViewModel>().AsSelf().PropertiesAutowired().InstancePerLifetimeScope();
+			builder.RegisterType<PeriodsChartViewModel>().AsSelf().InstancePerLifetimeScope();
 		}
 
 		protected override object GetInstance(Type serviceType, string key)
 		{
-			return string.IsNullOrEmpty(key) ? _container.Resolve(serviceType) : _container.ResolveKeyed(key, serviceType);
+			return string.IsNullOrEmpty(key) ? _scope.Resolve(serviceType) : _scope.ResolveKeyed(key, serviceType);
 		}
 
 		protected override IEnumerable<object> GetAllInstances(Type serviceType)
 		{
 			var t1 = typeof (IEnumerable<>).MakeGenericType(serviceType);
-			var resolve = (IEnumerable)_container.Resolve(t1);
+			var resolve = (IEnumerable)_scope.Resolve(t1);
 			return resolve.Cast<object>();
 		}
 
 		protected override void BuildUp(object instance)
 		{
-			_container.InjectProperties(instance);
+			_scope.InjectProperties(instance);
 		}
 	}
 }

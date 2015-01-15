@@ -25,15 +25,15 @@ namespace Sedentary
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			base.OnStartup(e);
+
+			IoC.Get<ApplicationLifetimeService>().OnStart();
+
 			AppDomain.CurrentDomain.UnhandledException += TraceUnhandledException;
 		}
 
 		protected override void OnExit(ExitEventArgs e)
 		{
 			base.OnExit(e);
-			var stats = IoC.Get<Statistics>();
-			StatsRepo.Save(stats);
-
 			Trace.Flush();
 		}
 
