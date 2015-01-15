@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Forms;
 using Sedentary.Framework;
 
 namespace Sedentary.Model
@@ -100,13 +102,23 @@ namespace Sedentary.Model
 			OnChanged();
 		}
 
+		public void ChangePeriodState(WorkPeriod period, WorkState state)
+		{
+			var index = _periods.IndexOf(period);
+			_periods[index] = period.SetState(state);
+			OnChanged();
+		}
+
+	    private void MergePeriods()
+	    {
+	        var groups = IEnumerable<IList<WorkPeriod>>();
+	    }
+
 		public void Clear()
 		{
 			_periods.Clear();
 			_prevPeriod = null;
 			SetState(WorkState.Sitting);
 		}
-
-
 	}
 }

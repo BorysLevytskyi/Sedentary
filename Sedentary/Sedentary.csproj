@@ -75,6 +75,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\RoutedCommands.cs" />
     <Compile Include="Framework\SystemIdleTimeObserver.cs" />
     <Compile Include="Framework\UserActivityListener.cs" />
     <Compile Include="Framework\Converters\TimeSpanToStringConverter.cs" />

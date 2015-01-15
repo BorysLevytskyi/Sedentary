@@ -75,5 +75,23 @@ namespace Sedentary.ViewModels
 		{
 			_stats.Clear();
 		}
+
+		public void SetSittingState(WorkPeriod period)
+		{
+			if (period.State != WorkState.Sitting)
+			{
+				_stats.ChangePeriodState(period, WorkState.Sitting);
+			}
+			
+		}
+
+		public void SetStandingState(WorkPeriod period)
+		{
+			if (period.State != WorkState.Standing)
+			{
+				_stats.ChangePeriodState(period, WorkState.Standing);
+			}
+
+		}
 	}
 }

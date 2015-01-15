@@ -3,7 +3,12 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:model="clr-namespace:Sedentary.Model"
 		xmlns:controls="clr-namespace:Sedentary.Views.Controls"
+		xmlns:commands="clr-namespace:Sedentary.Commands"
 		Title="Sitting Tracker" Height="350" Width="525" Name="Main">
+	<Window.CommandBindings>
+		<CommandBinding Command="commands:RoutedCommands.ReplaceToSittingState" Executed="ReplaceToSittingState" CanExecute="CanReplaceToSittingState" />
+		<CommandBinding Command="commands:RoutedCommands.ReplaceToStandingState" Executed="ReplaceToStandingState" CanExecute="CanReplaceToStandingState" />
+	</Window.CommandBindings>
 	<TabControl Margin="10">
 		<TabItem Header="Stats">
 			<StackPanel Margin="10">

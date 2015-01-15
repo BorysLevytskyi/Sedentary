@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Sedentary.Framework
 {
@@ -44,7 +47,7 @@ namespace Sedentary.Framework
 
 		public static TimeSpan TrimMilliseconds(this TimeSpan timeSpan)
 		{
-		    return timeSpan.RoundTo(TimeSpan.FromSeconds(1));
+			return timeSpan.RoundTo(TimeSpan.FromSeconds(1));
 		}
 
 		public static TimeSpan RoundTo(this TimeSpan timeSpan, TimeSpan windowSize)
@@ -55,6 +58,42 @@ namespace Sedentary.Framework
 		public static double InRangeOf(this double value, double min, double max)
 		{
 			return Math.Max(Math.Min(value, min), max);
+		}
+
+	    public static IEnumerable<IList<TElement>> SplitBySequences<TElement>(
+	        this IEnumerable<TElement> source)
+	    {
+	        var c = EqualityComparer<TElement>.Default;
+	        return source.SplitBySequences(c.Equals);
+	    }
+
+		public static IEnumerable<IList<TElement>> SplitBySequences<TElement>(
+			this IEnumerable<TElement> source,
+			Func<TElement, TElement, bool> matcher)
+		{
+			var list = new List<TElement>();
+			TElement prev = default(TElement);
+			int index = 0;
+			foreach (var element in source)
+			{
+				if (index++ == 0)
+				{
+					list.Add(element);
+					prev = element;
+					continue;
+				}
+
+				if (matcher(prev, element))
+				{
+					list.Add(element);
+					continue;
+				}
+
+				var ret = list;
+				list = new List<TElement>();
+				yield return ret;
+			}
+
 		}
 	}
 }

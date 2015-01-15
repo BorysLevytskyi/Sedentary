@@ -20,5 +20,13 @@ namespace Sedentary.Tests
             TimeSpan actual = time.RoundTo(window);
             Assert.That(actual, Is.EqualTo(expected));
         }
+
+        [Test]
+        public void ShouldSplitBySequences()
+        {
+            int[] values = { 1, 2, 2, 3, 4, 4, 4, 5, 5, 6, 6 };
+
+            var splitResult = values.SplitBySequences((x, y) => x == y);
+        }
     }
 }

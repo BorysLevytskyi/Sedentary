@@ -4,7 +4,7 @@ using Sedentary.Framework;
 
 namespace Sedentary.Model
 {
-	public class WorkPeriod
+	public class WorkPeriod // TODO: make struct
 	{
 		private readonly WorkState _state;
 		private readonly TimeSpan _startTime;
@@ -62,11 +62,21 @@ namespace Sedentary.Model
 			Tracer.Write("Period ended: {0}", this);
 		}
 
+	    public WorkPeriod SetState(WorkState state)
+	    {
+	        return new WorkPeriod(state, _startTime, _endTime);
+	    }
+
 		public override string ToString()
 		{
 			return string.Format(@"{0}: {1:hh\:mm\:ss} - {2:hh\:mm\:ss}. Length: {3}", _state, _startTime,
 				IsCompleted ? _endTime : DateTime.Now.TimeOfDay, Length);
 		}
+
+	    public WorkPeriod Prepend(WorkPeriod another)
+	    {
+	        return new WorkPeriod(_state, another.StartTime, _endTime);
+	    }
 
 	    public static WorkPeriod Start(WorkState state)
 	    {

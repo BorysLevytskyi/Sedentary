@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using Sedentary.Framework;
+using Sedentary.Model;
 using Sedentary.ViewModels;
 
 namespace Sedentary.Views
@@ -54,6 +56,42 @@ namespace Sedentary.Views
 		private void RefreshView(object sender, RoutedEventArgs e)
 		{
 			Model.Refresh();
+		}
+
+		private void ReplaceToSittingState(object sender, ExecutedRoutedEventArgs e)
+		{
+			var period = e.Parameter as WorkPeriod;
+			if (period == null)
+			{
+				return;
+			}
+
+			Model.SetSittingState(period);
+		}
+
+		private void ReplaceToStandingState(object sender, ExecutedRoutedEventArgs e)
+		{
+			var period = e.Parameter as WorkPeriod;
+			if (period == null)
+			{
+				return;
+			}
+
+			Model.SetStandingState(period);
+		}
+
+		private void CanReplaceToSittingState(object sender, CanExecuteRoutedEventArgs e)
+		{
+			var period = e.Parameter as WorkPeriod;
+			e.CanExecute = period != null && period.State != WorkState.Sitting;
+		    e.ContinueRouting = true;
+		}
+
+		private void CanReplaceToStandingState(object sender, CanExecuteRoutedEventArgs e)
+		{
+			var period = e.Parameter as WorkPeriod;
+			e.CanExecute = period != null && period.State != WorkState.Standing;
+		    e.ContinueRouting = true;
 		}
 	}
 }

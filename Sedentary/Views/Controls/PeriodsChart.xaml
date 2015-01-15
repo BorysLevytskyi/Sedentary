@@ -6,6 +6,7 @@
 			 xmlns:model="clr-namespace:Sedentary.Model"
 			 xmlns:converters="clr-namespace:Sedentary.Framework.Converters"
 			 xmlns:controls="clr-namespace:Sedentary.Views.Controls"
+			 xmlns:commands="clr-namespace:Sedentary.Commands"
 			 mc:Ignorable="d" 
 			 d:DesignHeight="300" d:DesignWidth="300" SnapsToDevicePixels="True">
 	<UserControl.Resources>
@@ -35,15 +36,21 @@
 		</Style>
 	</UserControl.Resources>
 	<Grid>
-	    <Grid.RowDefinitions>
-	        <RowDefinition Height="*" />
-	        <RowDefinition Height="Auto" />
-	    </Grid.RowDefinitions>
-	    <Border BorderBrush="Black" BorderThickness="0,0,0,1" Name="Brd">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Border BorderBrush="Black" BorderThickness="0,0,0,1" Name="Brd">
 			<ItemsControl ItemsSource="{Binding WorkPeriods}" Name="Chart" Background="White" HorizontalAlignment="Stretch">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="model:WorkPeriod">
 						<Border>
+							<Border.ContextMenu>
+								<ContextMenu>
+									<MenuItem Header="I was sitting" Command="commands:RoutedCommands.ReplaceToSittingState" CommandParameter="{Binding}"></MenuItem>
+									<MenuItem Header="I was standing" Command="commands:RoutedCommands.ReplaceToStandingState" CommandParameter="{Binding}"></MenuItem>
+								</ContextMenu>
+							</Border.ContextMenu>
 							<Border.Width>
 								<MultiBinding Converter="{StaticResource Converter}">
 									<Binding Path="Length" />
