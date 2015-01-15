@@ -13,9 +13,9 @@ namespace Sedentary.Model
 		private bool _idleStarted;
 
 		
-		public IdleWatcher(TimeSpan idleThreshold)
+		public IdleWatcher(Requirements requirements)
 		{
-			_idleThreshold = idleThreshold;
+			_idleThreshold = requirements.AwayThreshold;
 		}
 
 		public TimeSpan IdleTime

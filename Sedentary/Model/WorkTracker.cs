@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows.Threading;
 using Sedentary.Framework;
 using Sedentary.Model.Persistence;
@@ -8,14 +7,23 @@ namespace Sedentary.Model
 {
 	public class WorkTracker : IDisposable
 	{
-		private Requirements _requirements;
-		private IdleWatcher _idleWatcher;
-		private Statistics _stats;
+		private readonly Requirements _requirements;
+		private readonly IdleWatcher _idleWatcher;
+		private readonly Statistics _stats;
 		private DispatcherTimer _timer;
-		private Analyzer _analyzer;
+		private readonly Analyzer _analyzer;
 
-		private TrayIcon _tray;
+		private readonly TrayIcon _tray;
 		private bool _wasExceeded;
+
+		public WorkTracker(Requirements requirements, Statistics stats, Analyzer analyzer, IdleWatcher idleWatcher, TrayIcon tray)
+		{
+			_requirements = requirements;
+			_stats = stats;
+			_analyzer = analyzer;
+			_idleWatcher = idleWatcher;
+			_tray = tray;
+		}
 
 		public DispatcherTimer Timer
 		{
@@ -60,12 +68,6 @@ namespace Sedentary.Model
 
 			Tracer.Filter<IdleWatcher>();
 
-			_requirements = Requirements.Create();
-
-			_stats = StatsRepo.Get();
-			_analyzer = new Analyzer(_stats, Requirements);
-			_idleWatcher = new IdleWatcher(Requirements.AwayThreshold);
-			_tray = new TrayIcon(_stats, _analyzer, this);
 			_timer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
 
 			_tray.Init();

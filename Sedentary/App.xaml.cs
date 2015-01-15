@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using Autofac;
 using Sedentary.Framework;
 using Sedentary.Model;
 using Sedentary.Model.Persistence;
@@ -29,7 +30,11 @@ namespace Sedentary
 		{
 			base.OnStartup(e);
 
-			_tracker = new WorkTracker();
+			var containerBuilder = new ContainerBuilder();
+			Bootstrapper.RegisterContainer(containerBuilder);
+			var container = containerBuilder.Build();
+
+			_tracker = container.Resolve<WorkTracker>();
 			_tracker.Start();
 
 			AppDomain.CurrentDomain.UnhandledException += TraceUnhandledException;
