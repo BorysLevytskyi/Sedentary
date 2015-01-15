@@ -60,31 +60,31 @@ namespace Sedentary.Framework
 			return Math.Max(Math.Min(value, min), max);
 		}
 
-	    public static IEnumerable<IList<TElement>> SplitBySequences<TElement>(
-	        this IEnumerable<TElement> source)
+	    public static IEnumerable<IList<T>> SplitBySequences<T>(
+	        this IEnumerable<T> source)
 	    {
-	        var c = EqualityComparer<TElement>.Default;
+	        var c = EqualityComparer<T>.Default;
 	        return source.SplitBySequences(c.Equals);
 	    }
 
-		public static IEnumerable<IList<TElement>> SplitBySequences<TElement>(
-			this IEnumerable<TElement> source,
-			Func<TElement, TElement, bool> matcher)
+		public static IEnumerable<IList<T>> SplitBySequences<T>(
+			this IEnumerable<T> source,
+			Func<T, T, bool> comparer)
 		{
-			var list = new List<TElement>();
+			var list = new List<T>();
 
-			TElement prev = default(TElement);
+			T prev = default(T);
 			int index = 0;
 
-			foreach (TElement current in source)
+			foreach (T current in source)
 			{
-				if (index++ == 0 || matcher(prev, current))
+				if (index++ == 0 || comparer(prev, current))
 				{
 					list.Add(prev = current);
 					continue;
 				}
 
-				var newList = new List<TElement> {current};
+				var newList = new List<T> {current};
 
 				yield return list;
 				list = newList;
@@ -92,6 +92,13 @@ namespace Sedentary.Framework
 			}
 
 			yield return list;
+		}
+
+		public static IEnumerable<T> Reduce<T>(
+			this IEnumerable<IList<T>> source, 
+			Func<IList<T>, T> reduce)
+		{
+			return source.Select(sequence => sequence.Count == 1 ? sequence[0] : reduce(sequence));
 		}
 	}
 }

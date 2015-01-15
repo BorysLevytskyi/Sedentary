@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -28,7 +29,7 @@ namespace Sedentary.Tests
 		{
 			int[] values = { 1, 2, 2, 3, 4, 4, 4, 5, 5, 6, 6 };
 
-			var splitResult = values.SplitBySequences((x, y) => x == y).ToList();
+			var splitResult = values.SplitBySequences().ToList();
 
 			splitResult.ShouldAllBeEquivalentTo(new[]
 			{
@@ -39,6 +40,24 @@ namespace Sedentary.Tests
 				new[] {5, 5},
 				new[] {6, 6}
 			});
+		}
+
+		[Test]
+		public void ShouldReduce()
+		{
+			var values = new List<int[]>
+			{
+				new[] {1},
+				new[] {2, 2},
+				new[] {3},
+				new[] {4, 4, 4},
+				new[] {5, 5},
+				new[] {6, 6}
+			};
+
+			var splitResult = values.Reduce(s => s.Sum());
+
+			splitResult.ShouldAllBeEquivalentTo(new[] { 1, 4, 3, 12, 10, 12 });
 		}
 	}
 }

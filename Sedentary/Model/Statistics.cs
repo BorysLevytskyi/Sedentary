@@ -106,12 +106,19 @@ namespace Sedentary.Model
 		{
 			var index = _periods.IndexOf(period);
 			_periods[index] = period.SetState(state);
+			MergePeriods();
 			OnChanged();
 		}
 
 	    private void MergePeriods()
 	    {
-	        // var groups = IEnumerable<IList<WorkPeriod>>();
+		    var newPeriods = _periods.SplitBySequences((p1, p2) => p1.State == p2.State).Reduce(WorkPeriod.Merge).ToList();
+	        _periods.Clear();
+
+		    foreach (var p in newPeriods)
+		    {
+			   _periods.Add(p);
+		    }
 	    }
 
 		public void Clear()

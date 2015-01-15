@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Sedentary.Framework;
 
 namespace Sedentary.Model
@@ -73,9 +75,13 @@ namespace Sedentary.Model
 				IsCompleted ? _endTime : DateTime.Now.TimeOfDay, Length);
 		}
 
-	    public WorkPeriod Prepend(WorkPeriod another)
+	    public static WorkPeriod Merge(IList<WorkPeriod> periods)
 	    {
-	        return new WorkPeriod(_state, another.StartTime, _endTime);
+		    var last = periods.Last();
+	        return new WorkPeriod(
+				last.State, 
+				periods.First().StartTime, 
+				last._endTime); // Make sure that periods is running
 	    }
 
 	    public static WorkPeriod Start(WorkState state)
