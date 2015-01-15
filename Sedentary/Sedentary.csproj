@@ -73,7 +73,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Commands\RoutedCommands.cs" />
     <Compile Include="Framework\SystemIdleTimeObserver.cs" />
     <Compile Include="Framework\UserActivityListener.cs" />
     <Compile Include="Framework\Converters\TimeSpanToStringConverter.cs" />
@@ -93,11 +92,15 @@
     <Compile Include="Model\WorkState.cs" />
     <Compile Include="Model\WorkTracker.cs" />
     <Compile Include="Framework\TrayIcon.cs" />
-    <Page Include="Views\Controls\PeriodsChart.xaml">
+    <Page Include="Styles\CommonStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindow.xaml">
+    <Page Include="Views\PeriodsChartView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -105,17 +108,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\Controls\PeriodsChart.xaml.cs">
-      <DependentUpon>PeriodsChart.xaml</DependentUpon>
+    <Compile Include="ViewModels\PeriodsChartViewModel.cs" />
+    <Compile Include="Views\PeriodsChartView.xaml.cs">
+      <DependentUpon>PeriodsChartView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Framework\Converters\TimeSpanToSimeScaleWidthConverter.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="Views\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ViewModels\MainWindowModel.cs" />
+    <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Model\WorkPeriod.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using Autofac;
+using Caliburn.Micro;
 using Sedentary.Framework;
 using Sedentary.Model;
 using Sedentary.Model.Persistence;
@@ -13,39 +14,25 @@ namespace Sedentary
 	/// </summary>
 	public partial class App : Application
 	{
-		private static WorkTracker _tracker;
-
 		public App()
 		{
 			Trace.WriteLine(string.Empty);
 			Tracer.Write("APPLICATION STARTED");
-		}
-
-		public static WorkTracker Tracker
-		{
-			get { return _tracker; }
+			this.InitializeComponent();
+			Tracer.Write("Initialized");
 		}
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			base.OnStartup(e);
-
-			var containerBuilder = new ContainerBuilder();
-			Bootstrapper.RegisterContainer(containerBuilder);
-			var container = containerBuilder.Build();
-
-			_tracker = container.Resolve<WorkTracker>();
-			_tracker.Start();
-
 			AppDomain.CurrentDomain.UnhandledException += TraceUnhandledException;
 		}
 
 		protected override void OnExit(ExitEventArgs e)
 		{
 			base.OnExit(e);
-
-			StatsRepo.Save(_tracker.Statistics);
-			_tracker.Dispose();
+			var stats = IoC.Get<Statistics>();
+			StatsRepo.Save(stats);
 
 			Trace.Flush();
 		}

@@ -1,14 +1,13 @@
-﻿<UserControl x:Class="Sedentary.Views.Controls.PeriodsChart"
+﻿<UserControl x:Class="Sedentary.Views.PeriodsChartView"
 			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:model="clr-namespace:Sedentary.Model"
 			 xmlns:converters="clr-namespace:Sedentary.Framework.Converters"
-			 xmlns:controls="clr-namespace:Sedentary.Views.Controls"
-			 xmlns:commands="clr-namespace:Sedentary.Commands"
+			 xmlns:cal="http://www.caliburnproject.org"
 			 mc:Ignorable="d" 
-			 d:DesignHeight="300" d:DesignWidth="300" SnapsToDevicePixels="True">
+			 d:DesignHeight="300" d:DesignWidth="300" SnapsToDevicePixels="True" Name="LayoutRoot">
 	<UserControl.Resources>
 		<converters:TimeSpanToSimeScaleWidthConverter x:Key="Converter" />
 		<converters:WorkPeriodToLimitConverter x:Key="IsLimitConverter" />
@@ -44,11 +43,11 @@
 			<ItemsControl ItemsSource="{Binding WorkPeriods}" Name="Chart" Background="White" HorizontalAlignment="Stretch">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="model:WorkPeriod">
-						<Border>
+						<Border Tag="{Binding DataContext, ElementName=LayoutRoot}">
 							<Border.ContextMenu>
 								<ContextMenu>
-									<MenuItem Header="I was sitting" Command="commands:RoutedCommands.ReplaceToSittingState" CommandParameter="{Binding}"></MenuItem>
-									<MenuItem Header="I was standing" Command="commands:RoutedCommands.ReplaceToStandingState" CommandParameter="{Binding}"></MenuItem>
+									<MenuItem Header="I was sitting" cal:Message.Attach="SetSittingState($dataContext)" />
+									<MenuItem Header="I was standing" cal:Message.Attach="SetStandingState($dataContext)"/>
 								</ContextMenu>
 							</Border.ContextMenu>
 							<Border.Width>

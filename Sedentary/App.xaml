@@ -1,9 +1,17 @@
 ﻿<Application x:Class="Sedentary.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converters="clr-namespace:Sedentary.Framework.Converters"
-             StartupUri="Views\MainWindow.xaml">
+             xmlns:sedentary="clr-namespace:Sedentary"
+             xmlns:converters="clr-namespace:Sedentary.Framework.Converters">
     <Application.Resources>
-		<converters:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
-    </Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Styles/CommonStyles.xaml" />
+				<ResourceDictionary>
+					<sedentary:AppBootstrapper x:Key="bootstrapper" />
+					<converters:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
+				</ResourceDictionary>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Application.Resources>
 </Application>

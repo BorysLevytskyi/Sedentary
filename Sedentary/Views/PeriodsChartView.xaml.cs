@@ -8,25 +8,23 @@ using System.Windows.Controls;
 using Sedentary.Framework;
 using Sedentary.Model;
 
-namespace Sedentary.Views.Controls
+namespace Sedentary.Views
 {
 	/// <summary>
 	///     Interaction logic for PeriodsChart.xaml
 	/// </summary>
-	public partial class PeriodsChart : UserControl
+	public partial class PeriodsChartView : UserControl
 	{
 		public static readonly DependencyProperty TimeScaleProperty = DependencyProperty.Register(
-			"TimeScale", typeof (TimeSpan), typeof (PeriodsChart), new PropertyMetadata(TimeSpan.Zero));
+			"TimeScale", typeof (TimeSpan), typeof (PeriodsChartView), new PropertyMetadata(TimeSpan.Zero));
 
 		public static readonly DependencyProperty WorkPeriodsProperty = DependencyProperty.Register(
-			"WorkPeriods", typeof (IList<WorkPeriod>), typeof (PeriodsChart),
-			new PropertyMetadata(default(IList<WorkPeriod>), (sender, args) => ((PeriodsChart) sender).OnPeriodsChanged(args)));
+			"WorkPeriods", typeof (IList<WorkPeriod>), typeof (PeriodsChartView),
+			new PropertyMetadata(default(IList<WorkPeriod>), (sender, args) => ((PeriodsChartView) sender).OnPeriodsChanged(args)));
 
-		public PeriodsChart()
+		public PeriodsChartView()
 		{
 			InitializeComponent();
-
-			DataContext = this;
 
 			TimeScale = TimeSpan.FromHours(8);
 		}
