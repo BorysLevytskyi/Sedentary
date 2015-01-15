@@ -72,28 +72,26 @@ namespace Sedentary.Framework
 			Func<TElement, TElement, bool> matcher)
 		{
 			var list = new List<TElement>();
+
 			TElement prev = default(TElement);
 			int index = 0;
-			foreach (var element in source)
+
+			foreach (TElement current in source)
 			{
-				if (index++ == 0)
+				if (index++ == 0 || matcher(prev, current))
 				{
-					list.Add(element);
-					prev = element;
+					list.Add(prev = current);
 					continue;
 				}
 
-				if (matcher(prev, element))
-				{
-					list.Add(element);
-					continue;
-				}
+				var newList = new List<TElement> {current};
 
-				var ret = list;
-				list = new List<TElement>();
-				yield return ret;
+				yield return list;
+				list = newList;
+				prev = current;
 			}
 
+			yield return list;
 		}
 	}
 }

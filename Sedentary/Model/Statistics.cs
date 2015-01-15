@@ -111,7 +111,7 @@ namespace Sedentary.Model
 
 	    private void MergePeriods()
 	    {
-	        var groups = IEnumerable<IList<WorkPeriod>>();
+	        // var groups = IEnumerable<IList<WorkPeriod>>();
 	    }
 
 		public void Clear()
