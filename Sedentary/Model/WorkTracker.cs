@@ -36,12 +36,6 @@ namespace Sedentary.Model
 			remove { _idleWatcher.IdleStarted -= value; }
 		}
 
-		public event Action<TimeSpan> NoEventsOnTimeWindow
-		{
-			add { _idleWatcher.NoEventsOnTimeWindow += value; }
-			remove { _idleWatcher.NoEventsOnTimeWindow -= value; }
-		}
-
 		public void Start()
 		{
 			Tracer.Write("Started");

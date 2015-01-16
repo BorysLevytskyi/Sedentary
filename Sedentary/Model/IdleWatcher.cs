@@ -27,8 +27,6 @@ namespace Sedentary.Model
 
 		public event Action IdleStarted;
 
-		public event Action<TimeSpan> NoEventsOnTimeWindow;
-
 		protected virtual void OnIdleStarted()
 		{
 			_idleStarted = true;
