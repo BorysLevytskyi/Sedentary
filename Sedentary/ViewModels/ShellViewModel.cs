@@ -16,7 +16,6 @@ namespace Sedentary.ViewModels
 			_stats = stats;
 			_analyzer = analyzer;
 			_stats.Changed += Refresh;
-			_stats.Periods.CollectionChanged += (s, o) => Refresh();
 		}
 
 		public PeriodsChartViewModel Chart { get; set; }

@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Forms;
 using Sedentary.Framework;
 
 namespace Sedentary.Model
 {
 	public class Statistics
 	{
-		private readonly ObservableCollection<WorkPeriod> _periods;
+		private readonly List<WorkPeriod> _periods;
 		private WorkPeriod _currentPeriod;
 		private WorkPeriod _prevPeriod;
 
 		public Statistics(IList<WorkPeriod> periods)
 		{
-			_periods = new ObservableCollection<WorkPeriod>(periods);
+			_periods = new List<WorkPeriod>(periods);
 
 			_currentPeriod = periods.FirstOrDefault(p => !p.IsCompleted) ?? WorkPeriod.Start(WorkState.Sitting);
 
@@ -29,7 +25,7 @@ namespace Sedentary.Model
 
 		public Statistics()
 		{
-			_periods = new ObservableCollection<WorkPeriod>();
+			_periods = new List<WorkPeriod>();
 
 			SetState(WorkState.Sitting);
 		}
@@ -69,7 +65,7 @@ namespace Sedentary.Model
 			get { return _currentPeriod.Length; }
 		}
 
-		public ObservableCollection<WorkPeriod> Periods
+		public IEnumerable<WorkPeriod> Periods
 		{
 			get { return _periods; }
 		}
@@ -99,6 +95,7 @@ namespace Sedentary.Model
 			_prevPeriod = _currentPeriod;
 			_periods.Add(_currentPeriod = newPeriod);
 
+			MergePeriods();
 			OnChanged();
 		}
 
@@ -106,6 +103,7 @@ namespace Sedentary.Model
 		{
 			var index = _periods.IndexOf(period);
 			_periods[index] = period.SetState(state);
+
 			MergePeriods();
 			OnChanged();
 		}

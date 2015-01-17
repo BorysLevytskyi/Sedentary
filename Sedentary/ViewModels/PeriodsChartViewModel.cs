@@ -11,11 +11,24 @@ namespace Sedentary.ViewModels
 	{
 		private readonly Statistics _stats;
 		private TimeSpan _timeScale;
+		private readonly BindableCollection<WorkPeriod> _workPeriods;
 
 		public PeriodsChartViewModel(Statistics stats)
 		{
 			_stats = stats;
-			_stats.Periods.CollectionChanged += OnPeriodsChanged;
+			_stats.Changed += OnStatsChanged;
+			_workPeriods = new BindableCollection<WorkPeriod>(stats.Periods);
+
+			UpdateTimeScale();
+		}
+
+		private void OnStatsChanged()
+		{
+			_workPeriods.IsNotifying = false;
+			_workPeriods.Clear();
+			_workPeriods.AddRange(_stats.Periods);
+			_workPeriods.IsNotifying = true;
+
 			UpdateTimeScale();
 		}
 
@@ -30,9 +43,9 @@ namespace Sedentary.ViewModels
 			}
 		}
 
-		public ObservableCollection<WorkPeriod> WorkPeriods
+		public BindableCollection<WorkPeriod> WorkPeriods
 		{
-			get { return _stats.Periods; }
+			get { return _workPeriods; }
 		}
 
 		public void SetSittingState(WorkPeriod period)
