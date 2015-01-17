@@ -61,8 +61,6 @@ namespace Sedentary.Model
 		{
 			Tracer.Write("Started");
 
-			Tracer.Filter<IdleWatcher>();
-
 			_timer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
 
 			_tray.Init();

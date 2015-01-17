@@ -117,6 +117,8 @@ namespace Sedentary.Model
 		    {
 			   _periods.Add(p);
 		    }
+
+		    _currentPeriod = _periods.Single(p => !p.IsCompleted);
 	    }
 
 		public void Clear()

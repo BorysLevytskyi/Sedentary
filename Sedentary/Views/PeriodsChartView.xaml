@@ -26,7 +26,7 @@
 					<Setter Property="Background" Value="WhiteSmoke" />
 					<Setter Property="Foreground" Value="Black" />
 				</DataTrigger>
-				<DataTrigger Binding="{Binding ., Converter={StaticResource IsLimitConverter}}" Value="True">
+				<DataTrigger Binding="{Binding Period, Converter={StaticResource IsLimitConverter}}" Value="True">
 					<Setter Property="Background" Value="Red" />
 					<Setter Property="FontWeight" Value="Bold" />
 					<Setter Property="Foreground" Value="White" />
@@ -59,7 +59,7 @@
 							</Border.Width>
 							<StackPanel>
 									<TextBlock Text="{Binding State}" Style="{StaticResource PeriodBorder}" Padding="5,0" ToolTip="{Binding}" />
-									<TextBlock Text="{Binding Length, StringFormat={}{0:h\\h\\ m\\m}}" Style="{StaticResource PeriodBorder}" FontSize="10" Padding="5,0" />
+									<TextBlock Text="{Binding Length, Converter={StaticResource TimeSpanToStringConverter}, ConverterParameter=m}" Style="{StaticResource PeriodBorder}" FontSize="10" Padding="5,0" />
 							</StackPanel>
 						</Border>
 					</DataTemplate>

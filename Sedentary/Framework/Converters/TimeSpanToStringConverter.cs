@@ -6,11 +6,6 @@ namespace Sedentary.Framework.Converters
 {
 	public class TimeSpanToStringConverter : IValueConverter
 	{
-		public TimeSpanToStringConverter()
-		{
-			
-		}
-
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			return value is TimeSpan ? ((TimeSpan) value).ToHumanTimeString() : "value is not a time span";
@@ -19,6 +14,6 @@ namespace Sedentary.Framework.Converters
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			throw new NotImplementedException();
-		}
+		} 
 	}
 }

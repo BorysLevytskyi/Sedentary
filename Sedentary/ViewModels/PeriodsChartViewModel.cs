@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
+using System.Windows.Threading;
 using Caliburn.Micro;
+using Sedentary.Framework;
 using Sedentary.Model;
 
 namespace Sedentary.ViewModels
@@ -11,25 +16,29 @@ namespace Sedentary.ViewModels
 	{
 		private readonly Statistics _stats;
 		private TimeSpan _timeScale;
-		private readonly BindableCollection<WorkPeriod> _workPeriods;
+		private readonly BindableCollection<PeriodModel> _workPeriods;
+		private readonly DispatcherTimer _timer;
 
 		public PeriodsChartViewModel(Statistics stats)
 		{
 			_stats = stats;
 			_stats.Changed += OnStatsChanged;
-			_workPeriods = new BindableCollection<WorkPeriod>(stats.Periods);
+			_workPeriods = new BindableCollection<PeriodModel>(stats.Periods.Select(p => new PeriodModel(p)));
+			_workPeriods.CollectionChanged += (s,e) => UpdateTimeScale();
+			_timer = TimerFactory.StartTimer(TimeSpan.FromSeconds(1), OnTick);
 
 			UpdateTimeScale();
 		}
 
+		private void OnTick()
+		{
+			Execute.OnUIThread(() => WorkPeriods.Last().Update());
+		}
+
 		private void OnStatsChanged()
 		{
-			_workPeriods.IsNotifying = false;
 			_workPeriods.Clear();
-			_workPeriods.AddRange(_stats.Periods);
-			_workPeriods.IsNotifying = true;
-
-			UpdateTimeScale();
+			_workPeriods.AddRange(_stats.Periods.Select(p => new PeriodModel(p)));
 		}
 
 		public TimeSpan TimeScale
@@ -43,40 +52,67 @@ namespace Sedentary.ViewModels
 			}
 		}
 
-		public BindableCollection<WorkPeriod> WorkPeriods
+		public BindableCollection<PeriodModel> WorkPeriods
 		{
 			get { return _workPeriods; }
 		}
 
-		public void SetSittingState(WorkPeriod period)
+		public void SetSittingState(PeriodModel model)
 		{
+			var period = model.Period;
 			if (period.State != WorkState.Sitting)
 			{
 				_stats.ChangePeriodState(period, WorkState.Sitting);
 			}
 		}
 
-		public void SetStandingState(WorkPeriod period)
+		public void SetStandingState(PeriodModel model)
 		{
+			var period = model.Period;
 			if (period.State != WorkState.Standing)
 			{
 				_stats.ChangePeriodState(period, WorkState.Standing);
 			}
 		}
 
-		private void OnPeriodsChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			UpdateTimeScale();
-		}
-
 		private void UpdateTimeScale()
 		{
 			const int chunkSizeInSeconds = 30*60; // 30 min
-			var periodsTotalInSeconds = (int) WorkPeriods.Sum(p => p.Length.TotalSeconds);
+			var periodsTotalInSeconds = (int) WorkPeriods.Sum(p => p.Period.Length.TotalSeconds);
 
 			var chunksCount = (int) Math.Ceiling(periodsTotalInSeconds/(double) chunkSizeInSeconds);
 
 			TimeScale = TimeSpan.FromSeconds(Math.Max(chunkSizeInSeconds, chunksCount*chunkSizeInSeconds));
+		}
+	}
+
+	public class PeriodModel: PropertyChangedBase
+	{
+		private readonly WorkPeriod _period;
+
+		public PeriodModel(WorkPeriod period)
+		{
+			_period = period;
+		}
+
+		public WorkState State
+		{
+			get { return Period.State; }
+		}
+
+		public TimeSpan Length
+		{
+			get { return Period.Length; }
+		}
+
+		public WorkPeriod Period { get { return _period; } }
+
+		public void Update()
+		{
+			NotifyOfPropertyChange(() => Period.Length);
+			NotifyOfPropertyChange(() => Period.StartTime);
+			NotifyOfPropertyChange(() => Period.EndTime);
+			NotifyOfPropertyChange(() => Period.State);
 		}
 	}
 }
