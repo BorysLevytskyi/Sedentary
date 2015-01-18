@@ -13,7 +13,7 @@ namespace Sedentary.Model
 		private bool _idleStarted;
 
 		
-		public IdleWatcher(Requirements requirements)
+		public IdleWatcher(AppRequirements requirements)
 		{
 			_idleThreshold = requirements.AwayThreshold;
 		}

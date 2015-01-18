@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Windows.Threading;
 using Sedentary.Framework;
+using Sedentary.Properties;
 
 namespace Sedentary.Model
 {
 	public class WorkTracker
 	{
-		private readonly Analyzer _analyzer;
+		private readonly IPhysicalStateAnalyzer _analyzer;
 		private readonly IdleWatcher _idleWatcher;
-		private readonly Requirements _requirements;
 		private readonly Statistics _stats;
 
-		private readonly TrayIcon _tray;
+		private readonly ITrayIcon _tray;
 		private DispatcherTimer _timer;
 		private bool _wasExceeded;
 
-		public WorkTracker(Requirements requirements, Statistics stats, Analyzer analyzer, IdleWatcher idleWatcher,
-			TrayIcon tray)
+		public WorkTracker(AppRequirements requirements, Statistics stats, IPhysicalStateAnalyzer analyzer, IdleWatcher idleWatcher,
+			ITrayIcon tray)
 		{
-			_requirements = requirements;
 			_stats = stats;
 			_analyzer = analyzer;
 			_idleWatcher = idleWatcher;
@@ -30,21 +29,7 @@ namespace Sedentary.Model
 			get { return _timer; }
 		}
 
-		public Requirements Requirements
-		{
-			get { return _requirements; }
-		}
-
-		public Statistics Statistics
-		{
-			get { return _stats; }
-		}
-
-		public Analyzer Analyzer
-		{
-			get { return _analyzer; }
-		}
-
+	
 		public event Action OnUserAway
 		{
 			add { _idleWatcher.IdleStarted += value; }
@@ -68,8 +53,6 @@ namespace Sedentary.Model
 			_idleWatcher.Start();
 			_idleWatcher.UserActive += OnUserActive;
 			_idleWatcher.IdleStarted += OnIdleStarted;
-
-			_tray.OnPositionSwitch += OnPositionSwitch;
 
 			_timer.Start();
 			_timer.Tick += OnTimerOnTick;

@@ -4,7 +4,7 @@ using Sedentary.Framework;
 
 namespace Sedentary.Model
 {
-	public class Requirements
+	public class AppRequirements
 	{
 		public TimeSpan MaxSittingTime { get; set; }
 
@@ -12,7 +12,7 @@ namespace Sedentary.Model
 
 		public TimeSpan RequiredRestingTime { get; set; }
 
-		public static Requirements Create()
+		public static AppRequirements Create()
 		{
 			try
 			{
@@ -20,7 +20,7 @@ namespace Sedentary.Model
 				var maxSittingTime = TimeSpan.Parse(ConfigurationManager.AppSettings["maxSittingTime"]);
 				var restingPeriod = TimeSpan.Parse(ConfigurationManager.AppSettings["requiredRestingTime"]);
 
-			    return new Requirements
+			    return new AppRequirements
 			    {
 			        AwayThreshold = awayThreshold,
 			        MaxSittingTime = maxSittingTime,
@@ -34,9 +34,9 @@ namespace Sedentary.Model
 			}
 		}
 
-		private static Requirements CreateDefault()
+		private static AppRequirements CreateDefault()
 		{
-			return new Requirements
+			return new AppRequirements
 			{
 				AwayThreshold = TimeSpan.FromMinutes(5),
 				MaxSittingTime = TimeSpan.FromHours(1),

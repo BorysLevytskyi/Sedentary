@@ -52,11 +52,11 @@ namespace Sedentary
 		public static void RegisterContainer(ContainerBuilder builder)
 		{
 			builder.RegisterType<ApplicationLifetimeService>().AsSelf();
-			builder.Register(c => Requirements.Create()).AsSelf().InstancePerLifetimeScope();
+			builder.Register(c => AppRequirements.Create()).AsSelf().InstancePerLifetimeScope();
 			builder.Register(c => StatsRepo.Get()).AsSelf().InstancePerLifetimeScope();
-			builder.RegisterType<Analyzer>().InstancePerLifetimeScope();
+			builder.RegisterType<PhysicalStateAnalyzer>().As<IPhysicalStateAnalyzer>().InstancePerLifetimeScope();
 			builder.RegisterType<IdleWatcher>().InstancePerLifetimeScope();
-			builder.RegisterType<TrayIcon>().InstancePerLifetimeScope();
+			builder.RegisterType<TrayIcon>().As<TrayIcon>().InstancePerLifetimeScope();
 			builder.RegisterType<WorkTracker>().InstancePerLifetimeScope();
 			builder.RegisterType<WindowManager>().As<IWindowManager>().InstancePerLifetimeScope();
 			builder.RegisterType<EventAggregator>().As<IEventAggregator>().InstancePerLifetimeScope();
