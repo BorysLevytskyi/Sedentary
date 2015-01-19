@@ -8,10 +8,10 @@ namespace Sedentary.ViewModels
 {
 	public class ShellViewModel : PropertyChangedBase
 	{
-		private readonly PhysicalStateAnalyzer _analyzer;
+		private readonly Analyzer _analyzer;
 		private readonly Statistics _stats;
 
-		public ShellViewModel(Statistics stats, PhysicalStateAnalyzer analyzer)
+		public ShellViewModel(Statistics stats, Analyzer analyzer)
 		{
 			_stats = stats;
 			_analyzer = analyzer;

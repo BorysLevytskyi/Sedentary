@@ -7,23 +7,28 @@ using Application = System.Windows.Application;
 
 namespace Sedentary.Framework
 {
-	public interface ITrayIcon : IDisposable
+	public class TrayIcon : IDisposable
 	{
-		void Init();
-		void ShowWarning(string message, TimeSpan timeOut);
-		void SetIcon(WorkState state, double pressureRatio);
-	}
-
-	public class TrayIcon : ITrayIcon
-	{
+		private readonly Statistics _stats;
+		private readonly Analyzer _analyzer;
 		private IconConfig _cfg;
 
 		private NotifyIcon _icon;
 
-		public TrayIcon()
+		public TrayIcon(Statistics stats, Analyzer analyzer)
 		{
-			_cfg = new IconConfig(WorkState.Sitting);
+			_stats = stats;
+			_analyzer = analyzer;
+
+			//TODO:fix this
+			/*workTracker.OnUserAway += () => _icon.ShowBalloonTip(5000, "User Away", "You've went away", ToolTipIcon.Info);
+		    workTracker.NoEventsOnTimeWindow +=
+		        (window) =>
+		            _icon.ShowBalloonTip(1000, "No Events",
+		                string.Format("No events were registered for time window {0}", window), ToolTipIcon.Info);*/
 		}
+
+		public event Action OnPositionSwitch;
 
 		private IconConfig Icon
 		{
@@ -50,31 +55,6 @@ namespace Sedentary.Framework
 			}
 		}
 
-		public void ShowWarning(string message, TimeSpan timeout)
-		{
-			_icon.ShowBalloonTip((int) timeout.TotalMilliseconds, "Reminder",
-				string.Format(@"You've been sitting for {0:h\h\ m\m}.", _stats.CurrentPeriodLength),
-				ToolTipIcon.Warning);
-		}
-
-		public void SetIcon(WorkState state, double pressureRatio)
-		{
-			Color color = GetColor(pressureRatio);
-			Icon = Icon.SetWorkState(state).SetOverlay(color, (int) Math.Floor(16d*pressureRatio));
-		}
-
-		public void Init()
-		{
-			_icon = new NotifyIcon {Visible = true};
-
-			UpdateIcon();
-
-			_icon.MouseClick += OnIconOnClick;
-			_icon.MouseMove += OnIconMouseMove;
-		}
-
-		public event Action OnPositionSwitch;
-
 		private void UpdateIcon()
 		{
 			if (_icon.Icon != null)
@@ -85,6 +65,21 @@ namespace Sedentary.Framework
 			Bitmap bitmap = IconProvider.GetIconImage(_cfg);
 
 			_icon.Icon = System.Drawing.Icon.FromHandle(bitmap.GetHicon());
+		}
+
+		public void ShowWarning()
+		{
+			_icon.ShowBalloonTip(5000, "Reminder", string.Format(@"You've been sitting for {0:h\h\ m\m}.", _stats.CurrentPeriodLength),
+				ToolTipIcon.Warning);
+		}
+
+		public void Refresh()
+		{
+			var pressureRate = _analyzer.GetSittingPressureRate();
+			int overlayHeight = (int)Math.Floor(16d * pressureRate);
+			var color = GetColor(pressureRate);
+
+			Icon = Icon.SetOverlay(color, overlayHeight).SetWorkState(_stats.CurrentState);
 		}
 
 		private Color GetColor(double rate)
@@ -100,6 +95,16 @@ namespace Sedentary.Framework
 			}
 
 			return Color.Red;
+		}
+
+		public void Init()
+		{
+			_icon = new NotifyIcon {Visible = true};
+
+			UpdateIcon();
+
+			_icon.MouseClick += OnIconOnClick;
+			_icon.MouseMove += OnIconMouseMove;
 		}
 
 		private void OnIconMouseMove(object sender, MouseEventArgs e)

@@ -12,7 +12,7 @@ namespace Sedentary.Framework.Converters
 
 		public WorkPeriodToLimitConverter()
 		{
-			_maxSittingTime = IoC.Get<AppRequirements>().MaxSittingTime;
+			_maxSittingTime = IoC.Get<Requirements>().MaxSittingTime;
 		}
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
