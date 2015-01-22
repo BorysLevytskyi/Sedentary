@@ -3,7 +3,7 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:model="clr-namespace:Sedentary.Model"
 		xmlns:cal="http://www.caliburnproject.org"
-		Title="Sitting Tracker" Height="350" Width="525" Name="Main">
+		Title="Sitting Tracker" Height="350" Width="525" Name="Main" ShowActivated="True" >
 	<TabControl Margin="10">
 		<TabItem Header="Stats">
 			<StackPanel Margin="10">
@@ -31,8 +31,8 @@
 
 				<UserControl cal:View.Model="{Binding Chart}" Margin="10 20 10 10" />
 
-				<Button Content="Clear Stats" cal:Message.Attach="ClearStatistics"  HorizontalAlignment="Right" Padding="10, 5" />
-				<Button Content="Refresh" cal:Message.Attach="Refresh" HorizontalAlignment="Left" Padding="10, 5" />
+				<Button Name="ClearStatistics" Content="Clear Stats" HorizontalAlignment="Right" />
+				<Button Name="Refresh" Content="Refresh" HorizontalAlignment="Left" />
 			</StackPanel>
 		</TabItem>
 		<TabItem Header="Periods">

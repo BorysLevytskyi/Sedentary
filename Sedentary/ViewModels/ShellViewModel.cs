@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Caliburn.Micro;
 using Sedentary.Model;
+using Screen = System.Windows.Forms.Screen;
 
 namespace Sedentary.ViewModels
 {
@@ -11,11 +12,13 @@ namespace Sedentary.ViewModels
 		private readonly Analyzer _analyzer;
 		private readonly Statistics _stats;
 
-		public ShellViewModel(Statistics stats, Analyzer analyzer)
+		public ShellViewModel(Statistics stats, Analyzer analyzer, WorkTracker tracker)
 		{
 			_stats = stats;
 			_analyzer = analyzer;
 			_stats.Changed += Refresh;
+
+			tracker.UserReturn += OnUserReturned;
 		}
 
 		public PeriodsChartViewModel Chart { get; set; }
@@ -53,6 +56,24 @@ namespace Sedentary.ViewModels
 		public void ClearStatistics()
 		{
 			_stats.Clear();
+		}
+
+		public void OnUserReturned(WorkPeriod awayPeriod)
+		{
+			var screen = Screen.PrimaryScreen;
+
+			IoC.Get<IWindowManager>().ShowWindow(
+				new UserReturnViewModel(awayPeriod)
+				{
+					SetSitting = () => _stats.ChangePeriodState(awayPeriod, WorkState.Sitting),
+					SetStanding = () => _stats.ChangePeriodState(awayPeriod, WorkState.Standing),
+				}, null,
+				new Dictionary<string, object>
+					{
+						{ "Top", screen.WorkingArea.Height - 300 },
+						{ "Left", screen.WorkingArea.Width - 600},
+						{ "Title", "Welcome back"}
+					});
 		}
 	}
 }

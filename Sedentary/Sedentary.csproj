@@ -79,7 +79,7 @@
     <Compile Include="Framework\UserActivityListener.cs" />
     <Compile Include="Framework\Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Framework\Converters\WorkPeriodToLimitConverter.cs" />
-    <Compile Include="Framework\Countdown.cs" />
+    <Compile Include="Framework\CountdownTimer.cs" />
     <Compile Include="Framework\Diagnostics\TraceEvent.cs" />
     <Compile Include="Framework\IconConfig.cs" />
     <Compile Include="Framework\IconProvider.cs" />
@@ -94,6 +94,9 @@
     <Compile Include="Model\WorkState.cs" />
     <Compile Include="Model\WorkTracker.cs" />
     <Compile Include="Framework\TrayIcon.cs" />
+    <Compile Include="Views\UserReturnView.xaml.cs">
+      <DependentUpon>UserReturnView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Styles\CommonStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -111,6 +114,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModels\PeriodsChartViewModel.cs" />
+    <Compile Include="ViewModels\UserReturnViewModel.cs" />
     <Compile Include="Views\PeriodsChartView.xaml.cs">
       <DependentUpon>PeriodsChartView.xaml</DependentUpon>
     </Compile>
@@ -119,6 +123,10 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\UserReturnView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ViewModels\ShellViewModel.cs" />

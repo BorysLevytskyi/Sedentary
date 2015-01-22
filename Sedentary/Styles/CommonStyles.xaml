@@ -4,4 +4,8 @@
     <Style TargetType="MenuItem">
 		<Setter Property="cal:Action.TargetWithoutContext" Value="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}" />
 	</Style>
+	
+	<Style TargetType="Button">
+		<Setter Property="Padding" Value="10, 5" />
+	</Style>
 </ResourceDictionary>

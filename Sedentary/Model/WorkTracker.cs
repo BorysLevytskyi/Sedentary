@@ -10,12 +10,16 @@ namespace Sedentary.Model
 		private readonly IdleWatcher _idleWatcher;
 		private readonly Requirements _requirements;
 		private readonly Statistics _stats;
-
 		private readonly TrayIcon _tray;
+
 		private DispatcherTimer _timer;
 		private bool _wasExceeded;
 
-		public WorkTracker(Requirements requirements, Statistics stats, Analyzer analyzer, IdleWatcher idleWatcher,
+		public WorkTracker(
+			Requirements requirements, 
+			Statistics stats, 
+			Analyzer analyzer, 
+			IdleWatcher idleWatcher,
 			TrayIcon tray)
 		{
 			_requirements = requirements;
@@ -51,6 +55,14 @@ namespace Sedentary.Model
 			remove { _idleWatcher.IdleStarted -= value; }
 		}
 
+		public event Action<WorkPeriod> UserReturn;
+
+		protected virtual void OnUserReturn(WorkPeriod awayPeriod)
+		{
+			var handler = UserReturn;
+			if (handler != null) handler(awayPeriod);
+		}
+
 		public void Start()
 		{
 			Tracer.Write("Started");
@@ -78,8 +90,10 @@ namespace Sedentary.Model
 		{
 			if (_stats.CurrentState == WorkState.Away)
 			{
+				var awayPeriod = _stats.CurrentPeriod;
 				Tracer.Write("User returned. Idle time was: {0}", idleTime);
 				RestoreLastState();
+				OnUserReturn(awayPeriod);
 			}
 		}
 

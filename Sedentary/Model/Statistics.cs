@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Sedentary.Framework;
 
@@ -102,6 +103,13 @@ namespace Sedentary.Model
 		public void ChangePeriodState(WorkPeriod period, WorkState state)
 		{
 			var index = _periods.IndexOf(period);
+
+			if (index == -1)
+			{
+				Tracer.Write("Incorrect index of the period {0}", period);
+				return;
+			}
+
 			_periods[index] = period.SetState(state);
 
 			MergePeriods();
