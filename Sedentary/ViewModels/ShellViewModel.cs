@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using Caliburn.Micro;
 using Sedentary.Model;
 using Screen = System.Windows.Forms.Screen;
@@ -70,10 +71,14 @@ namespace Sedentary.ViewModels
 				}, null,
 				new Dictionary<string, object>
 					{
-						{ "Top", screen.WorkingArea.Height - 300 },
-						{ "Left", screen.WorkingArea.Width - 600},
-						{ "Title", "Welcome back"}
+						{ "Owner", Application.Current.MainWindow },
+						
 					});
 		}
+
+	    public void Test()
+	    {
+	        OnUserReturned(this.CurrentPeriod);
+	    }
 	}
 }

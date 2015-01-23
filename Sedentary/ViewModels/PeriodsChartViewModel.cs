@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms.VisualStyles;
 using System.Windows.Threading;
 using Caliburn.Micro;
 using Sedentary.Framework;
