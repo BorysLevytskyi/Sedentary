@@ -18,7 +18,7 @@ namespace Sedentary.ViewModels
 		{
 			_awayPeriod = awayPeriod;
 
-			_countDown = new CountdownTimer(TimeSpan.FromSeconds(10));
+			_countDown = new CountdownTimer(TimeSpan.FromSeconds(20));
 			_countDown.Tick += () => NotifyOfPropertyChange(() => SecondsLeft);
 			_countDown.Done += WasSitting;
 			_countDown.Start();
