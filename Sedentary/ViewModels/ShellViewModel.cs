@@ -61,14 +61,17 @@ namespace Sedentary.ViewModels
 
 		public void OnUserReturned(WorkPeriod awayPeriod)
 		{
-			var screen = Screen.PrimaryScreen;
+
+			var model = new UserReturnViewModel(awayPeriod)
+			{
+				SetSitting = () => _stats.ChangePeriodState(awayPeriod, WorkState.Sitting),
+				SetStanding = () => _stats.ChangePeriodState(awayPeriod, WorkState.Standing),
+			};
+
 
 			IoC.Get<IWindowManager>().ShowWindow(
-				new UserReturnViewModel(awayPeriod)
-				{
-					SetSitting = () => _stats.ChangePeriodState(awayPeriod, WorkState.Sitting),
-					SetStanding = () => _stats.ChangePeriodState(awayPeriod, WorkState.Standing),
-				}, null,
+				new TrayNotificationWindowViewModel(model), 
+				null,
 				new Dictionary<string, object>
 					{
 						{ "Owner", Application.Current.MainWindow },
@@ -76,9 +79,9 @@ namespace Sedentary.ViewModels
 					});
 		}
 
-	    public void Test()
-	    {
-	        OnUserReturned(this.CurrentPeriod);
-	    }
+		public void Test()
+		{
+			OnUserReturned(this.CurrentPeriod);
+		}
 	}
 }

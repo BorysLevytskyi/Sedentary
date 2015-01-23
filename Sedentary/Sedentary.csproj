@@ -95,6 +95,10 @@
     <Compile Include="Model\WorkState.cs" />
     <Compile Include="Model\WorkTracker.cs" />
     <Compile Include="Framework\TrayIcon.cs" />
+    <Compile Include="ViewModels\TrayNotificationWindowViewModel.cs" />
+    <Compile Include="Views\TrayNotificationWindowView.xaml.cs">
+      <DependentUpon>TrayNotificationWindowView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserReturnView.xaml.cs">
       <DependentUpon>UserReturnView.xaml</DependentUpon>
     </Compile>
@@ -124,6 +128,10 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\TrayNotificationWindowView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\UserReturnView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

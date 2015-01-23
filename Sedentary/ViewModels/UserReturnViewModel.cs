@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection.Emit;
 using System.Windows;
 using Caliburn.Micro;
 using Sedentary.Framework;
@@ -11,12 +8,10 @@ using Sedentary.Model;
 
 namespace Sedentary.ViewModels
 {
-	public class UserReturnViewModel : Screen
+	public class UserReturnViewModel : ViewAware
 	{
 		private readonly WorkPeriod _awayPeriod;
 		private readonly CountdownTimer _countDown;
-		private Window _window;
-		private Rectangle _screenArea = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
 
 		public UserReturnViewModel(WorkPeriod awayPeriod)
 		{
@@ -26,16 +21,6 @@ namespace Sedentary.ViewModels
 			_countDown.Tick += () => NotifyOfPropertyChange(() => SecondsLeft);
 			_countDown.Done += WasSitting;
 			_countDown.Start();
-		}
-
-		protected override void OnViewAttached(object view, object context)
-		{
-			base.OnViewAttached(view, context);
-
-			if (view is Window)
-			{
-				_window = view as Window;
-			}
 		}
 
 		public WorkPeriod AwayPeriod
@@ -60,7 +45,8 @@ namespace Sedentary.ViewModels
 			{
 				SetSitting();
 			}
-			TryClose();
+
+			Close();
 		}
 
 		public void WasNotSitting()
@@ -71,23 +57,13 @@ namespace Sedentary.ViewModels
 			{
 				SetStanding();
 			}
-			TryClose();
+
+			Close();
 		}
 
-		public double TopOffset
+		public void Close()
 		{
-			get { return _screenArea.Height - _window.ActualHeight; }
+		   System.Windows.Window.GetWindow((DependencyObject)Views.First().Value).Close();
 		}
-
-		public double ScreenHeight
-		{
-			get { return _screenArea.Height; }
-		}
-
-		public double LeftOffset
-		{
-			get { return _screenArea.Width - _window.ActualWidth; }
-		}
-
 	}
 }
