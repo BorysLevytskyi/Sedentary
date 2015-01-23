@@ -20,7 +20,7 @@ namespace Sedentary.ViewModels
 
 			_countDown = new CountdownTimer(TimeSpan.FromSeconds(10));
 			_countDown.Tick += () => NotifyOfPropertyChange(() => SecondsLeft);
-			_countDown.Done += WasNotSitting;
+			_countDown.Done += WasSitting;
 			_countDown.Start();
 		}
 
