@@ -1,0 +1,18 @@
+﻿<Window x:Class="Sedentary.Views.TrayNotificationWindowView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:cal="http://www.caliburnproject.org"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:behavior="clr-namespace:Sedentary.Framework.Behavior"
+			 mc:Ignorable="d" 
+			 d:DesignHeight="300" d:DesignWidth="300" ResizeMode="NoResize"
+			 Name="LayoutRoot" Height="300" Width="300"
+			 WindowStartupLocation="Manual" SizeToContent="WidthAndHeight" ShowActivated="True" Topmost="True" WindowStyle="None" Padding="10"
+			BorderThickness="1">
+	<i:Interaction.Behaviors>
+		<behavior:ShowWindowNearTrayBehavior />
+	</i:Interaction.Behaviors>
+	<ContentControl cal:View.Model="{Binding ContentModel}" />
+</Window>

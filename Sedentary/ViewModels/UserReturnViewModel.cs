@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection.Emit;
+using System.Windows;
 using Caliburn.Micro;
 using Sedentary.Framework;
 using Sedentary.Model;
 
 namespace Sedentary.ViewModels
 {
-	public class UserReturnViewModel : Screen
+	public class UserReturnViewModel : ViewAware
 	{
 		private readonly WorkPeriod _awayPeriod;
 		private readonly CountdownTimer _countDown;
@@ -18,9 +17,9 @@ namespace Sedentary.ViewModels
 		{
 			_awayPeriod = awayPeriod;
 
-			_countDown = new CountdownTimer(TimeSpan.FromSeconds(10));
+			_countDown = new CountdownTimer(TimeSpan.FromSeconds(60));
 			_countDown.Tick += () => NotifyOfPropertyChange(() => SecondsLeft);
-			_countDown.Done += WasNotSitting;
+			_countDown.Done += WasSitting;
 			_countDown.Start();
 		}
 
@@ -46,7 +45,8 @@ namespace Sedentary.ViewModels
 			{
 				SetSitting();
 			}
-			TryClose();
+
+			Close();
 		}
 
 		public void WasNotSitting()
@@ -57,8 +57,13 @@ namespace Sedentary.ViewModels
 			{
 				SetStanding();
 			}
-			TryClose();
+
+			Close();
 		}
 
+		public void Close()
+		{
+		   System.Windows.Window.GetWindow((DependencyObject)Views.First().Value).Close();
+		}
 	}
 }
