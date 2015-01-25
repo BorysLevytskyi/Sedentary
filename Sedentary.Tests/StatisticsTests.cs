@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using Sedentary.Model;
+using Sedentary.Properties;
 
 namespace Sedentary.Tests
 {
@@ -34,6 +35,17 @@ namespace Sedentary.Tests
 			period.State.Should().Be(WorkState.Sitting);
 			period.StartTime.Should().Be(h1);
 			period.IsCompleted.Should().BeFalse();
+		}
+	}
+
+	[TestFixture]
+	public class WorkPeriodTests
+	{
+		[Test]
+		public void EndTimeLessThanStartTime()
+		{
+			var p = new WorkPeriod(WorkState.Sitting, TimeSpan.FromHours(4), TimeSpan.FromHours(1));
+			p.Length.Should().Be(TimeSpan.FromHours(21));
 		}
 	}
 }

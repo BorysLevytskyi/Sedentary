@@ -45,7 +45,9 @@ namespace Sedentary.Model
 			get
 			{
 				return IsCompleted 
-					? _endTime - _startTime 
+					? _endTime > _startTime
+						? _endTime - _startTime 
+						: (_endTime - _startTime) + TimeSpan.FromHours(24)
 					: DateTime.Now.TimeOfDay - _startTime;
 			}
 		}
