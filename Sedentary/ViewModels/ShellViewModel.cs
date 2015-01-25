@@ -31,7 +31,7 @@ namespace Sedentary.ViewModels
 
 		public string TotalSittingTime
 		{
-			get { return _stats.TotalSittingTime.ToString(@"h\h\ m\m"); }
+			get { return _analyzer.TotalSittingTime.ToString(@"h\h\ m\m"); }
 		}
 
 		public WorkPeriod CurrentPeriod
@@ -61,13 +61,12 @@ namespace Sedentary.ViewModels
 
 		public void OnUserReturned(WorkPeriod awayPeriod)
 		{
-
+			// TODO: Move this somewhere else
 			var model = new UserReturnViewModel(awayPeriod)
 			{
 				SetSitting = () => _stats.ChangePeriodState(awayPeriod, WorkState.Sitting),
 				SetStanding = () => _stats.ChangePeriodState(awayPeriod, WorkState.Standing),
 			};
-
 
 			IoC.Get<IWindowManager>().ShowWindow(
 				new TrayNotificationWindowViewModel(model), 
@@ -75,7 +74,6 @@ namespace Sedentary.ViewModels
 				new Dictionary<string, object>
 					{
 						{ "Owner", Application.Current.MainWindow },
-						
 					});
 		}
 

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Sedentary.Framework;
 
 namespace Sedentary.Model
@@ -20,6 +21,11 @@ namespace Sedentary.Model
 			{
 				return _stats.CurrentState == WorkState.Sitting && _stats.CurrentPeriodLength >= _requirements.MaxSittingTime;
 			}
+		}
+
+		public TimeSpan TotalSittingTime
+		{
+			get { return TimeSpan.FromTicks(_stats.Periods.Where(p => p.State == WorkState.Sitting).Sum(p => p.Length.Ticks)); }
 		}
 
 		// TODO: Remove trace one proven to work

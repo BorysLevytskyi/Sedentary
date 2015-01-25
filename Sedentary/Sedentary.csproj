@@ -77,6 +77,7 @@
     <Compile Include="Framework\IApplicationLifetimeService.cs" />
     <Compile Include="Framework\SystemIdleTimeObserver.cs" />
     <Compile Include="Framework\TimerFactory.cs" />
+    <Compile Include="Framework\TimeSpanExtensions.cs" />
     <Compile Include="Framework\UserActivityListener.cs" />
     <Compile Include="Framework\Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Framework\Converters\WorkPeriodToLimitConverter.cs" />

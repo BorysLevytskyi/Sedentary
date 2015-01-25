@@ -37,15 +37,4 @@ namespace Sedentary.Tests
 			period.IsCompleted.Should().BeFalse();
 		}
 	}
-
-	[TestFixture]
-	public class WorkPeriodTests
-	{
-		[Test]
-		public void EndTimeLessThanStartTime()
-		{
-			var p = new WorkPeriod(WorkState.Sitting, TimeSpan.FromHours(4), TimeSpan.FromHours(1));
-			p.Length.Should().Be(TimeSpan.FromHours(21));
-		}
-	}
 }
