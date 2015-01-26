@@ -27,13 +27,13 @@
 				</TextBlock>
 
 				<TextBlock Text="{Binding TotalSittingTime, StringFormat={}Total Sitting Today: {0}}" FontWeight="Bold" FontSize="18" />
-				<TextBlock Text="{Binding PressureRatio, StringFormat={} Pressure ratio: {0}}" />
 
 				<UserControl cal:View.Model="{Binding Chart}" Margin="10 20 10 10" />
 				
-				<Button Name="ClearStatistics" Content="Clear Stats" HorizontalAlignment="Right" />
-				<Button Name="Refresh" Content="Refresh" HorizontalAlignment="Left" />
-				<Button Name="Test" Content="Refresh" HorizontalAlignment="Right" />
+				<Grid>
+					<Button Name="ClearStatistics" Content="Clear Stats" HorizontalAlignment="Right" />
+					<Button Name="Refresh" Content="Refresh" HorizontalAlignment="Left" />
+				</Grid>
 			</StackPanel>
 		</TabItem>
 		<TabItem Header="Periods">
