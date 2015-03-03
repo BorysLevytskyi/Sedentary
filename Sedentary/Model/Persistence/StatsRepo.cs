@@ -8,7 +8,7 @@ namespace Sedentary.Model.Persistence
 {
 	public static class StatsRepo
 	{
-		public static Statistics Get()
+		public static Statistics GetTodaysStats()
 		{
 			if (!File.Exists(FilePath.Value))
 			{
@@ -24,6 +24,12 @@ namespace Sedentary.Model.Persistence
 				{
 					var serializer = new XmlSerializer(typeof(PersistentStats));
 					saved = (PersistentStats)serializer.Deserialize(stream);
+				}
+
+				if (saved.Date < DateTime.Today)
+				{
+					Tracer.Write("Statistics are for the yesterday. New statistics created for today");
+					return new Statistics();
 				}
 
 				Tracer.Write("Statistics are loaded from file");
@@ -59,11 +65,15 @@ namespace Sedentary.Model.Persistence
 
 			public PersistentStats(Statistics statistics)
 			{
+				Date = DateTime.Today;
 				Periods = statistics.Periods.Select(p => new PersistentWorkPeriod(p)).ToArray();
 			}
 
 			[XmlArray]
 			public PersistentWorkPeriod[] Periods { get; set; }
+
+			[XmlAttribute]
+			public DateTime Date { get; set; }
 		}
 
 		[XmlType("Period")]

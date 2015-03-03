@@ -53,7 +53,7 @@ namespace Sedentary
 		{
 			builder.RegisterType<ApplicationLifetimeService>().AsSelf();
 			builder.Register(c => Requirements.Create()).AsSelf().InstancePerLifetimeScope();
-			builder.Register(c => StatsRepo.Get()).AsSelf().InstancePerLifetimeScope();
+			builder.Register(c => StatsRepo.GetTodaysStats()).AsSelf().InstancePerLifetimeScope();
 			builder.RegisterType<Analyzer>().InstancePerLifetimeScope();
 			builder.RegisterType<IdleWatcher>().InstancePerLifetimeScope();
 			builder.RegisterType<TrayIcon>().InstancePerLifetimeScope();
