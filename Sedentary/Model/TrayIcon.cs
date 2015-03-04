@@ -2,10 +2,10 @@
 using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
-using Sedentary.Model;
+using Sedentary.Framework;
 using Application = System.Windows.Application;
 
-namespace Sedentary.Framework
+namespace Sedentary.Model
 {
 	public class TrayIcon : IDisposable
 	{

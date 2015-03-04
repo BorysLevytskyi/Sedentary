@@ -95,7 +95,7 @@
     <Compile Include="Model\Persistence\StatsRepo.cs" />
     <Compile Include="Model\WorkState.cs" />
     <Compile Include="Model\WorkTracker.cs" />
-    <Compile Include="Framework\TrayIcon.cs" />
+    <Compile Include="Model\TrayIcon.cs" />
     <Compile Include="ViewModels\TrayNotificationWindowViewModel.cs" />
     <Compile Include="Views\TrayNotificationWindowView.xaml.cs">
       <DependentUpon>TrayNotificationWindowView.xaml</DependentUpon>
