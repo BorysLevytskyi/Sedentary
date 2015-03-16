@@ -84,12 +84,12 @@ namespace Sedentary.Framework
 
 		private Color GetColor(double rate)
 		{
-			if (rate <= 0.5d)
+			if (rate <= 1d)
 			{
 				return Color.Green;
 			}
 
-			if (rate <= 0.8d)
+			if (rate <= 1.2d)
 			{
 				return Color.Orange;
 			}
