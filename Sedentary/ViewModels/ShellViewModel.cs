@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows;
 using Caliburn.Micro;
 using Sedentary.Model;
-using Screen = System.Windows.Forms.Screen;
 
 namespace Sedentary.ViewModels
 {
@@ -75,6 +74,26 @@ namespace Sedentary.ViewModels
 					{
 						{ "Owner", Application.Current.MainWindow },
 					});
+		}
+
+		public void ShowWindow()
+		{
+			var window = Application.Current.MainWindow;
+
+			if (!window.IsVisible)
+			{
+				window.Show();
+			}
+
+			if (window.WindowState == WindowState.Minimized)
+			{
+				window.WindowState = WindowState.Normal;
+			}
+
+			window.Activate();
+			window.Topmost = true;  // important
+			window.Topmost = false; // important
+			window.Focus();         // 
 		}
 
 		public void Test()

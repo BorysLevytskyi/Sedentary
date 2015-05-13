@@ -82,9 +82,9 @@ namespace Sedentary.Model
 		{
 			var pressureRate = _analyzer.GetSittingPressureRate();
 
-		    var heightFloating = 16d*pressureRate;
+			var heightFloating = 16d*pressureRate;
 
-		    int overlayHeight = _stats.IsSitting
+			int overlayHeight = _stats.IsSitting
 				? (int) Math.Floor(heightFloating)
 				: (int) Math.Ceiling(heightFloating);
 
@@ -141,7 +141,14 @@ namespace Sedentary.Model
 				else
 				{
 					form.Show();
+					if (form.WindowState == WindowState.Minimized)
+					{
+						form.WindowState = WindowState.Normal;
+					}
 					form.Activate();
+					form.Topmost = true;
+					form.Topmost = false;
+					form.Focus();
 				}
 			}
 		}

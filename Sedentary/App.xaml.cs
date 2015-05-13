@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
@@ -60,23 +61,19 @@ namespace Sedentary
 		}
 	}
 
-	public class SingleInstance : IDisposable
+	public class AppRunHelper : IDisposable
 	{
-		private Mutex _mutex;
-
-		public bool IsFirstRun()
+		public static bool IsFirstRun()
 		{
-			bool newOneCreated;
-			_mutex = new Mutex(true, "SedenteryApplicationSingleInstanceKey", out newOneCreated);
-			return newOneCreated;
+			var assembly = Assembly.GetExecutingAssembly();
+			Process[] processesByName = Process.GetProcessesByName(assembly.GetName().Name);
+
+			return processesByName.Length == 1;
 		}
 
 		public void Dispose()
 		{
-			if (_mutex != null)
-			{
-				_mutex.ReleaseMutex();
-			}
+			
 		}
 	}
 
@@ -88,18 +85,15 @@ namespace Sedentary
 
 		public static void Start()
 		{
-			using (var inst = new SingleInstance())
+			if (AppRunHelper.IsFirstRun())
 			{
-				if (inst.IsFirstRun())
-				{
-					var app = new App();
-					app.InitializeComponent();
-					app.Run();
-				}
-				else
-				{
-					BringFrontExistingProcess();
-				}
+				var app = new App();
+				app.InitializeComponent();
+				app.Run();
+			}
+			else
+			{
+				BringFrontExistingProcess();
 			}
 		}
 
@@ -110,6 +104,7 @@ namespace Sedentary
 			{
 				if (process.Id != current.Id)
 				{
+				    Debugger.Launch();
 					SetForegroundWindow(process.MainWindowHandle);
 					break;
 				}
