@@ -104,7 +104,6 @@ namespace Sedentary
 			{
 				if (process.Id != current.Id)
 				{
-				    Debugger.Launch();
 					SetForegroundWindow(process.MainWindowHandle);
 					break;
 				}

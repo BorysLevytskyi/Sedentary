@@ -132,6 +132,7 @@ namespace Sedentary.Model
 			}
 			else
 			{
+				// TODO: Move this all staff to new IShell interface. ShowWindow and HideWindow methods
 				Window form = Application.Current.MainWindow;
 
 				if (form.IsVisible)
