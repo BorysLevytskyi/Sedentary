@@ -61,7 +61,7 @@ namespace Sedentary
 		}
 	}
 
-	public class AppRunHelper : IDisposable
+	public static class AppRunHelper 
 	{
 		public static bool IsFirstRun()
 		{
@@ -69,11 +69,6 @@ namespace Sedentary
 			Process[] processesByName = Process.GetProcessesByName(assembly.GetName().Name);
 
 			return processesByName.Length == 1;
-		}
-
-		public void Dispose()
-		{
-			
 		}
 	}
 
